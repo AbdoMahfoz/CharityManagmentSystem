@@ -48,6 +48,21 @@
     <Compile Include="CMS.cs" />
     <Compile Include="DBConnectedMode.cs" />
     <Compile Include="DBDisconnectedMode.cs" />
+    <Compile Include="IDBLayer.cs" />
+    <Compile Include="Models\Beneficiary.cs" />
+    <Compile Include="Models\Campaign.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Donor.cs" />
+    <Compile Include="Models\DonorItem.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\MainCategory.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Recepient.cs" />
+    <Compile Include="Models\RecepientItem.cs" />
+    <Compile Include="Models\SubCategory.cs" />
+    <Compile Include="Models\Volunteer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
