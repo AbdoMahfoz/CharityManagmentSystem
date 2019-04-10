@@ -50,5 +50,10 @@
     <Compile Include="DBDisconnectedMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Material\EERD.jpg" />
+    <Content Include="Material\Schema.png" />
+    <Content Include="Material\SQLScript.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
