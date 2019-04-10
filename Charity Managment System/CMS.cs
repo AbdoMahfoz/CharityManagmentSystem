@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Charity_Managment_System
 {
-    static public class DbLayer
+    static public class CMS
     {
 
     }
