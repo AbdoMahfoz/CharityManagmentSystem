@@ -48,6 +48,7 @@
     <Compile Include="CMS.cs" />
     <Compile Include="DBConnectedMode.cs" />
     <Compile Include="DBDisconnectedMode.cs" />
+    <Compile Include="DBGlobals.cs" />
     <Compile Include="IDBLayer.cs" />
     <Compile Include="Models\Beneficiary.cs" />
     <Compile Include="Models\Campaign.cs" />

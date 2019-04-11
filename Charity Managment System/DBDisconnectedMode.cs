@@ -11,6 +11,18 @@ namespace Charity_Managment_System
 {
     class DBDisconnectedMode : IDBLayer
     {
+        public DBDisconnectedMode()
+        {
+
+        }
+        public void InitializeConnection()
+        {
+            throw new NotImplementedException();
+        }
+        public void TerminateConnection()
+        {
+            throw new NotImplementedException();
+        }
         public Beneficiary[] GetAllBeneficiaries()
         {
             throw new NotImplementedException();
@@ -112,14 +124,6 @@ namespace Charity_Managment_System
             throw new NotImplementedException();
         }
         public Volunteer[] GetVolunteersOf(Campaign campaign)
-        {
-            throw new NotImplementedException();
-        }
-        public void InitializeConnection()
-        {
-            throw new NotImplementedException();
-        }
-        public void TerminateConnection()
         {
             throw new NotImplementedException();
         }
