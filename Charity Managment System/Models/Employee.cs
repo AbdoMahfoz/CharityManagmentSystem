@@ -8,5 +8,8 @@ namespace Charity_Managment_System.Models
 {
     public class Employee : Person
     {
+        Campaign Campaign_Name;
+        Department Department_Name;
+        int Salary;
     }
 }

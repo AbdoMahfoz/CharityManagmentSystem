@@ -8,5 +8,8 @@ namespace Charity_Managment_System.Models
 {
     public class Department
     {
+        string Dept_Name;
+        string Description;
+        List<Employee> Employees;
     }
 }

@@ -8,5 +8,9 @@ namespace Charity_Managment_System.Models
 {
     public class Person
     {
+        int SSN;
+        string Name;
+        string Mail;
+        List<string> Location;
     }
 }

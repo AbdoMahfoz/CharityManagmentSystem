@@ -8,5 +8,6 @@ namespace Charity_Managment_System.Models
 {
     public class Volunteer : Person
     {
+        Campaign Campaign_Name;
     }
 }

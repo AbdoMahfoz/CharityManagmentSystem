@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Charity_Managment_System.Models
 {
-    public class Recepient
+    public class Recepient : Person
     {
+        List<RecepientItem> RecepientItems;
     }
 }

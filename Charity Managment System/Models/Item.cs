@@ -8,5 +8,8 @@ namespace Charity_Managment_System.Models
 {
     public class Item
     {
+        MainCategory MainName;
+        string Description;
+        SubCategory SubName;
     }
 }
