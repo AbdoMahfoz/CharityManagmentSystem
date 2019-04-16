@@ -14,12 +14,6 @@ namespace Charity_Managment_System.Models
         string Description;
         string Location;
         int Budget;
-        Employee Manager_SSN;
-        List<Employee> Employee_SSN;
-        List<Volunteer> Volunteer_SSN;
-        List<Beneficiary> Beneficiary_SSN;
-        List<Recepient> Recepient_SSN;
-        List<Donor> Donor_SSN;
-        
+        Employee Manager;
     }
 }

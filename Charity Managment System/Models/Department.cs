@@ -10,6 +10,5 @@ namespace Charity_Managment_System.Models
     {
         string Dept_Name;
         string Description;
-        List<Employee> Employees;
     }
 }

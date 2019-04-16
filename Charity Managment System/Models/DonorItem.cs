@@ -10,7 +10,6 @@ namespace Charity_Managment_System.Models
     {
         Donor Donor;
         Item item;
-        Campaign Campaign_ID;
         int Count;
     }
 }

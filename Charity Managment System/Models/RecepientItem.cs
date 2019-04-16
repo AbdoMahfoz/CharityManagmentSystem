@@ -9,7 +9,6 @@ namespace Charity_Managment_System.Models
     public class RecepientItem
     {
         Recepient Recipient_SSN;
-        Campaign Campaign_ID;
         Item item;
         int Count;
     }
