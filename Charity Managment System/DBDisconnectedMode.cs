@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
-using Charity_Managment_System.Models;
+using CharityManagmentSystem.Models;
 
-namespace Charity_Managment_System
+namespace CharityManagmentSystem
 {
     class DBDisconnectedMode : IDBLayer
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace Charity_Managment_System
+namespace CharityManagmentSystem
 {
     static class DBGlobals
     {

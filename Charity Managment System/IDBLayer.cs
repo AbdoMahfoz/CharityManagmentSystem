@@ -1,7 +1,10 @@
-﻿using Charity_Managment_System.Models;
+﻿using CharityManagmentSystem.Models;
 
-namespace Charity_Managment_System
+namespace CharityManagmentSystem
 {
+    /// <summary>
+    /// Defines a list of functions that cover all interactions with the database
+    /// </summary>
     interface IDBLayer
     {
         //Connection Control

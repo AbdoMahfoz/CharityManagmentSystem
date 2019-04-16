@@ -5,12 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
-using Charity_Managment_System.Models;
+using CharityManagmentSystem.Models;
 
-namespace Charity_Managment_System
+namespace CharityManagmentSystem
 {
     class DBConnectedMode : IDBLayer
     {
+        private T FillObject<T>(OracleDataReader reader)
+        {
+            if(typeof(T) == typeof(Person))
+            {
+                Person p = new Person();
+                //Fill data from reader
+                return (T)(object)p;
+            }
+            else if(typeof(T) == typeof(Campaign))
+            {
+                Campaign c = new Campaign();
+                //Fill data from reader
+                return (T)(object)c;
+            }
+            //And so on for all of our models...
+            else
+            {
+                throw new NotImplementedException("No implmentation available for the given type: " + typeof(T).ToString());
+            }
+        }
         public Beneficiary[] GetAllBeneficiaries()
         {
             throw new NotImplementedException();

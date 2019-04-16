@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Charity_Managment_System.Models
+namespace CharityManagmentSystem.Models
 {
     public class DonorItem
     {

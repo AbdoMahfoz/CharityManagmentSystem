@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Charity_Managment_System
+namespace CharityManagmentSystem
 {
     public enum DataAccessMode { Connected, Disconnected };
     public class CMS
