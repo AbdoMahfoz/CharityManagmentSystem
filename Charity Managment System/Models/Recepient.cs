@@ -8,6 +8,6 @@ namespace Charity_Managment_System.Models
 {
     public class Recepient : Person
     {
-        List<RecepientItem> RecepientItems;
+        
     }
 }

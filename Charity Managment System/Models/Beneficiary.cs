@@ -8,6 +8,5 @@ namespace Charity_Managment_System.Models
 {
     class Beneficiary : Person
     {
-        Campaign Campaign_Name;
     }
 }

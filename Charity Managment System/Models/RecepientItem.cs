@@ -10,9 +10,7 @@ namespace Charity_Managment_System.Models
     {
         Recepient Recipient_SSN;
         Campaign Campaign_ID;
-        MainCategory MainName;
-        SubCategory SubName;
-        string Description;
+        Item item;
         int Count;
     }
 }
