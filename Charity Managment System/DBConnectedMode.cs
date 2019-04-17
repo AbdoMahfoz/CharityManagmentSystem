@@ -35,7 +35,6 @@ namespace CharityManagmentSystem
         }
         private T[] FillList<T>(string cmdstr)
         {
-
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
@@ -46,14 +45,12 @@ namespace CharityManagmentSystem
             List<T> list = new List<T>();
             while (reader.Read())
             {
-
                 T c = FillObject<T>(reader);
                 list.Add(c);
             }
             reader.Close();
             return list.ToArray();
         }
-            
         public Beneficiary[] GetAllBeneficiaries()
         {
             throw new NotImplementedException();
