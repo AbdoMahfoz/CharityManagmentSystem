@@ -11,6 +11,5 @@ namespace Charity_Managment_System.Models
         int SSN;
         string Name;
         string Mail;
-        List<string> Location;
     }
 }

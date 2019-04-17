@@ -9,6 +9,6 @@ namespace Charity_Managment_System.Models
     public class Category
     {
         string Name;
-        string Description_;
+        string Description;
     }
 }

@@ -8,7 +8,7 @@ namespace Charity_Managment_System.Models
 {
     public class RecepientItem
     {
-        Recepient Recipient_SSN;
+        Recepient Recipient;
         Item item;
         int Count;
     }

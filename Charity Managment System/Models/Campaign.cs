@@ -8,12 +8,11 @@ namespace Charity_Managment_System.Models
 {
     public class Campaign
     {
-        int ID;
-        DateTime Date;
-        string Name;
-        string Description;
-        string Location;
+        int ID_;
+        DateTime Date_;
+        string Name_;
+        string Description_;
+        string Location_;
         int Budget;
-        Employee Manager;
     }
 }
