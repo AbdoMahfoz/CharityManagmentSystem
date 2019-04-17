@@ -53,7 +53,7 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            return FillList<Beneficiary>("select * from Beneficiary");
+            return FillList<Beneficiary>("select * from Beneficiary b, Person p where b.SSN = p.SSN");
 
         }
         public Campaign[] GetAllCampaigns()
@@ -73,20 +73,22 @@ namespace CharityManagmentSystem
         }
         public Donor[] GetAllDonors()
         {
-            return FillList<Donor>("select * from Donor");
+            return FillList<Donor>("select * from Donor d, Person p where d.SSN = p.SSN");
 
         }
         public Employee[] GetAllEmployees()
         {
-            return FillList<Employee>("select * from Employee");
+            return FillList<Employee>("select * from Employee e, Person p where e.SSN = p.SSN");
         }
         public Item[] GetAllItems()
         {
-            return FillList<Item>("select * from Item");
+            //return FillList<Item>("select * from Item i, MainCategory MC,SubCategory SC "+
+            //  "where i.Name = MC.Name and i.Name = SC.Name");
+            throw new NotImplementedException();
         }
         public MainCategory[] GetAllMainCategories()
         {
-            return FillList<MainCategory>("select * from MainCategory");
+            return FillList<MainCategory>("select * from MainCategory MC ,Category C where MC.Name = C.Name");
         }
         public Person[] GetAllPersons()
         {
