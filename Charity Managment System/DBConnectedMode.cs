@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 using CharityManagmentSystem.Models;
+using System.Data;
 
 namespace CharityManagmentSystem
 {
     class DBConnectedMode : IDBLayer
     {
+        OracleConnection conn;
         private T FillObject<T>(OracleDataReader reader)
         {
-            if(typeof(T) == typeof(Person))
+            if (typeof(T) == typeof(Person))
             {
                 Person p = new Person();
                 //Fill data from reader
                 return (T)(object)p;
             }
-            else if(typeof(T) == typeof(Campaign))
+            else if (typeof(T) == typeof(Campaign))
             {
                 Campaign c = new Campaign();
                 //Fill data from reader
@@ -31,6 +33,27 @@ namespace CharityManagmentSystem
                 throw new NotImplementedException("No implmentation available for the given type: " + typeof(T).ToString());
             }
         }
+        private T[] FillList<T>(string cmdstr)
+        {
+
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = cmdstr,
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
+            List<T> list = new List<T>();
+            while (reader.Read())
+            {
+
+                T c = FillObject<T>(reader);
+                list.Add(c);
+            }
+            reader.Close();
+            return list.ToArray();
+        }
+            
         public Beneficiary[] GetAllBeneficiaries()
         {
             throw new NotImplementedException();
@@ -61,31 +84,32 @@ namespace CharityManagmentSystem
         }
         public MainCategory[] GetAllMainCategories()
         {
-            throw new NotImplementedException();
+            return FillList<MainCategory>("select * from MainCategory");
         }
         public Person[] GetAllPersons()
         {
-            throw new NotImplementedException();
+            return FillList<Person>("select * from Person");
         }
         public Recepient[] GetAllRecepients()
         {
-            throw new NotImplementedException();
+            return FillList<Recepient>("select * from Recipient r,Person p where r.recipient_ssn=p.ssn");
         }
         public SubCategory[] GetAllSubCategories()
         {
-            throw new NotImplementedException();
+            return FillList<SubCategory>("select * from SubCategory sub,category c where sub.name=c.name");
         }
         public Volunteer[] GetAllVolunteers()
         {
-            throw new NotImplementedException();
+            return FillList<Volunteer>("select * from Volunteer");
         }
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
-            throw new NotImplementedException();
+            return FillList<Beneficiary>("select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C " +
+                                         "where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
-            throw new NotImplementedException();
+            return FillList<Department>("select dept_name,description from departmrnt dep , Employee emp where dep.dept_name=emp.department_name");
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
