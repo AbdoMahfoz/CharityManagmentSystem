@@ -87,7 +87,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public Employee[] GetEmployeesManaging(Campaign campaign)
+        public Employee GetEmployeeManaging(Campaign campaign)
         {
             throw new NotImplementedException();
         }

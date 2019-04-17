@@ -25,7 +25,7 @@ namespace CharityManagmentSystem
         Category[] GetAllCategories();
         //Employee
         Employee[] GetEmployeesWorkingIn(Department department);
-        Employee[] GetEmployeesManaging(Campaign campaign);
+        Employee GetEmployeeManaging(Campaign campaign);
         //Donor
         Donor[] GetDonorsDonatingTo(Campaign campaign);
         DonorItem[] GetDonorsOf(Campaign campaign, Item item);
