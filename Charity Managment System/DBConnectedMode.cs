@@ -53,31 +53,129 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Beneficiary";
+            List<Beneficiary> benlist = new List<Beneficiary>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Beneficiary b = new Beneficiary();
+                b = FillObject<Beneficiary>(dr);
+                benlist.Add(b);
+
+            }
+            dr.Close();
+            return benlist.ToArray();
         }
         public Campaign[] GetAllCampaigns()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Campaign";
+            List<Campaign> camplist = new List<Campaign>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Campaign b = new Campaign();
+                b = FillObject<Campaign>(dr);
+                camplist.Add(b);
+
+            }
+            dr.Close();
+            return camplist.ToArray();
         }
         public Category[] GetAllCategories()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Category";
+            List<Category> catlist = new List<Category>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Category b = new Category();
+                b = FillObject<Category>(dr);
+                catlist.Add(b);
+
+            }
+            dr.Close();
+            return catlist.ToArray();
         }
         public Department[] GetAllDepartments()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Department";
+            List<Department> deplist = new List<Department>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Department b = new Department();
+                b = FillObject<Department>(dr);
+                deplist.Add(b);
+
+            }
+            dr.Close();
+            return deplist.ToArray();
         }
         public Donor[] GetAllDonors()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Donor";
+            List<Donor> donlist = new List<Donor>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Donor b = new Donor();
+                b = FillObject<Donor>(dr);
+                donlist.Add(b);
+
+            }
+            dr.Close();
+            return donlist.ToArray();
         }
         public Employee[] GetAllEmployees()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Employee";
+            List<Employee> emplist = new List<Employee>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Employee b = new Employee();
+                b = FillObject<Employee>(dr);
+                emplist.Add(b);
+
+            }
+            dr.Close();
+            return emplist.ToArray();
         }
         public Item[] GetAllItems()
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select * from Item";
+            List<Item> itemlist = new List<Item>();
+            OracleDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Item b = new Item();
+                b = FillObject<Item>(dr);
+                itemlist.Add(b);
+
+            }
+            dr.Close();
+            return itemlist.ToArray();
         }
         public MainCategory[] GetAllMainCategories()
         {
@@ -158,11 +256,14 @@ namespace CharityManagmentSystem
         }
         public void InitializeConnection()
         {
-            throw new NotImplementedException();
+            conn = new OracleConnection(DBGlobals.ConnectionString);
+            conn.Open();
+
         }
         public void TerminateConnection()
         {
-            throw new NotImplementedException();
+            conn.Close();
+
         }
     }
 }
