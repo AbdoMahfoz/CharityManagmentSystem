@@ -53,129 +53,36 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Beneficiary";
-            List<Beneficiary> benlist = new List<Beneficiary>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Beneficiary b = new Beneficiary();
-                b = FillObject<Beneficiary>(dr);
-                benlist.Add(b);
+            return FillList<Beneficiary>("select * from Beneficiary");
 
-            }
-            dr.Close();
-            return benlist.ToArray();
         }
         public Campaign[] GetAllCampaigns()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Campaign";
-            List<Campaign> camplist = new List<Campaign>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Campaign b = new Campaign();
-                b = FillObject<Campaign>(dr);
-                camplist.Add(b);
+            return FillList<Campaign>("select * from Campaign");
 
-            }
-            dr.Close();
-            return camplist.ToArray();
         }
         public Category[] GetAllCategories()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Category";
-            List<Category> catlist = new List<Category>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Category b = new Category();
-                b = FillObject<Category>(dr);
-                catlist.Add(b);
+            return FillList<Category>("select * from Category");
 
-            }
-            dr.Close();
-            return catlist.ToArray();
         }
         public Department[] GetAllDepartments()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Department";
-            List<Department> deplist = new List<Department>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Department b = new Department();
-                b = FillObject<Department>(dr);
-                deplist.Add(b);
+            return FillList<Department>("select * from Department");
 
-            }
-            dr.Close();
-            return deplist.ToArray();
         }
         public Donor[] GetAllDonors()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Donor";
-            List<Donor> donlist = new List<Donor>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Donor b = new Donor();
-                b = FillObject<Donor>(dr);
-                donlist.Add(b);
+            return FillList<Donor>("select * from Donor");
 
-            }
-            dr.Close();
-            return donlist.ToArray();
         }
         public Employee[] GetAllEmployees()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Employee";
-            List<Employee> emplist = new List<Employee>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Employee b = new Employee();
-                b = FillObject<Employee>(dr);
-                emplist.Add(b);
-
-            }
-            dr.Close();
-            return emplist.ToArray();
+            return FillList<Employee>("select * from Employee");
         }
         public Item[] GetAllItems()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Item";
-            List<Item> itemlist = new List<Item>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Item b = new Item();
-                b = FillObject<Item>(dr);
-                itemlist.Add(b);
-
-            }
-            dr.Close();
-            return itemlist.ToArray();
+            return FillList<Item>("select * from Item");
         }
         public MainCategory[] GetAllMainCategories()
         {
