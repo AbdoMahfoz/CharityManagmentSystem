@@ -74,10 +74,11 @@ Create Table SubCategory(
 );
 
 Create Table Item(
+	Name_ VarChar2(20) unique not null,
 	MainName VarChar2(20) references MainCategory(Name_), 
 	Description_ VarChar2(150), 
 	SubName VarChar2(20) references SubCategory(Name_), 
-	constraint ItemPK Primary key (MainName, SubName)
+	constraint ItemPK Primary key (Name_, MainName, SubName)
 );
 
 Create Table Donate_to(

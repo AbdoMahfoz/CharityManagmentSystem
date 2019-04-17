@@ -8,5 +8,6 @@ namespace CharityManagmentSystem.Models
 {
     public class MainCategory : Category
     {
+
     }
 }
