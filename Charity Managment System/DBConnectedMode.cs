@@ -21,7 +21,7 @@ namespace CharityManagmentSystem
                 list[i] = reader.GetName(i);
             }
             T res = new T();
-            foreach(var Property in typeof(T).GetProperties())
+            foreach(var Property in typeof(T).GetFields())
             {
                 string x = Array.Find(list, new Predicate<string>((string s) => s.Replace("_", "") == Property.Name));
                 if(!string.IsNullOrEmpty(x))
