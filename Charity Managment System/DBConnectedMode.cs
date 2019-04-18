@@ -23,7 +23,8 @@ namespace CharityManagmentSystem
             T res = new T();
             foreach(var Property in typeof(T).GetFields())
             {
-                string x = Array.Find(list, new Predicate<string>((string s) => s.Replace("_", "") == Property.Name));
+                string x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
                 if(!string.IsNullOrEmpty(x))
                 {
                     Property.SetValue(res, reader[x]);
