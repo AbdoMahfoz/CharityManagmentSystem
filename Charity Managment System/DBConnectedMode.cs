@@ -13,27 +13,26 @@ namespace CharityManagmentSystem
     class DBConnectedMode : IDBLayer
     {
         OracleConnection conn;
-        private T FillObject<T>(OracleDataReader reader)
+        private T FillObject<T>(OracleDataReader reader) where T : new()
         {
-            if (typeof(T) == typeof(Person))
+            string[] list = new string[reader.FieldCount];
+            for(int i = 0; i < reader.FieldCount; i++)
             {
-                Person p = new Person();
-                //Fill data from reader
-                return (T)(object)p;
+                list[i] = reader.GetName(i);
             }
-            else if (typeof(T) == typeof(Campaign))
+            T res = new T();
+            foreach(var Property in typeof(T).GetFields())
             {
-                Campaign c = new Campaign();
-                //Fill data from reader
-                return (T)(object)c;
+                string x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
+                if(!string.IsNullOrEmpty(x))
+                {
+                    Property.SetValue(res, reader[x]);
+                }
             }
-            //And so on for all of our models...
-            else
-            {
-                throw new NotImplementedException("No implmentation available for the given type: " + typeof(T).ToString());
-            }
+            return res;
         }
-        private T[] FillList<T>(string cmdstr)
+        private T[] FillList<T>(string cmdstr) where T : new()
         {
             OracleCommand cmd = new OracleCommand
             {
