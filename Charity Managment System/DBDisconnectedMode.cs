@@ -127,5 +127,89 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        public void InsertPersons(params Person[] people)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertBeneficiary(params Beneficiary[] beneficiaries)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertDonors(params Donor[] donors)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertReceipeients(params Recepient[] recepients)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertVolunteers(params Volunteer[] volunteers)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertEmployee(params Employee[] employees)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertCampaign(params Campaign[] campaigns)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertCategories(params Category[] categories)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertDepartments(params Department[] departments)
+        {
+            throw new NotImplementedException();
+        }
+        public void InsertItems(params Item[] items)
+        {
+            throw new NotImplementedException();
+        }
+        public void LinkItemWithDonor(DonorItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void LinkItemWithRecepient(RecepientItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void LinkCampaignWithEmployee(Campaign campaign, Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+        public void UpdateEntity<T>(T Entity)
+        {
+            throw new NotImplementedException();
+        }
+        public void UpdateLink(DonorItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void UpdateLink(RecepientItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void UpdateLink(Campaign campaign, Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+        public void DeleteEntity<T>(T Entity)
+        {
+            throw new NotImplementedException();
+        }
+        public void DeleteLink(DonorItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void DeleteLink(RecepientItem item)
+        {
+            throw new NotImplementedException();
+        }
+        public void DeleteLink(Campaign campaign, Employee employee)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
