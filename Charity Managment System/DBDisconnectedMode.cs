@@ -7,6 +7,7 @@ using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 using CharityManagmentSystem.Models;
 using System.Data;
+using System.Threading;
 
 namespace CharityManagmentSystem
 {
@@ -34,10 +35,10 @@ namespace CharityManagmentSystem
         /// </summary>
         public void TerminateConnection()
         {
-            foreach(var adapter in adapters.Values)
+            foreach(var adapter in adapters)
             {
-                new OracleCommandBuilder(adapter);
-                adapter.Update(dataSet);
+                new OracleCommandBuilder(adapter.Value);
+                adapter.Value.Update(dataSet, adapter.Key);
             }
             adapters.Clear();
             dataSet = null;
@@ -51,14 +52,42 @@ namespace CharityManagmentSystem
             if(!adapters.ContainsKey(tableName))
             {
                 var adapter = new OracleDataAdapter($"SELECT * FROM {tableName}", DBGlobals.ConnectionString);
-                adapter.Fill(dataSet, tableName);
-                adapters.Add(tableName, adapter);
+                DataSet tmp = new DataSet();
+                adapter.Fill(tmp, tableName);
+                lock(dataSet)
+                {
+                    dataSet.Merge(tmp);
+                }
+                lock(adapters)
+                {
+                    adapters.Add(tableName, adapter);
+                }
+            }
+        }
+        /// <summary>
+        /// Fetches all given tables concurrently
+        /// </summary>
+        /// <param name="actions">Table names</param>
+        void ParallelFetch(params string[] tables)
+        {
+            Thread[] threads = new Thread[tables.Length];
+            for(int i = 0; i < threads.Length; i++)
+            {
+                threads[i] = new Thread(new ParameterizedThreadStart((object o) =>
+                {
+                    int j = (int)o;
+                    FetchTable(tables[j]);
+                }));
+                threads[i].Start(i);
+            }
+            foreach(Thread t in threads)
+            {
+                t.Join();
             }
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            FetchTable("Beneficiary");
-            FetchTable("Person");
+            ParallelFetch("Beneficiary", "Person");
             var res = from entry in dataSet.Tables["Beneficiary"].AsEnumerable()
                       join entry2 in dataSet.Tables["Person"].AsEnumerable()
                       on entry.Field<int>("Beneficiary_SSN") equals entry2.Field<int>("SSN")
@@ -72,55 +101,194 @@ namespace CharityManagmentSystem
         }
         public Campaign[] GetAllCampaigns()
         {
-            throw new NotImplementedException();
+            FetchTable("Campaign");
+            var res = from entry in dataSet.Tables["Campaign"].AsEnumerable()
+                      select new Campaign()
+                      {
+                          Name = entry.Field<string>("Name_"),
+                          Budget = entry.Field<int>("Budget"),
+                          Date = entry.Field<DateTime>("Date_"),
+                          Description = entry.Field<string>("Description_"),
+                          Location = entry.Field<string>("Location_"),
+                          ID = entry.Field<int>("ID_")
+                      };
+            return res.ToArray();
         }
         public Category[] GetAllCategories()
         {
-            throw new NotImplementedException();
+            FetchTable("Category");
+            var res = from entry in dataSet.Tables["Category"].AsEnumerable()
+                      select new Category()
+                      {
+                          Name = entry.Field<string>("Name_"),
+                          Description = entry.Field<string>("Description_")
+                      };
+            return res.ToArray();
         }
         public Department[] GetAllDepartments()
         {
-            throw new NotImplementedException();
+            FetchTable("Department");
+            var res = from entry in dataSet.Tables["Department"].AsEnumerable()
+                      select new Department()
+                      {
+                          DeptName = entry.Field<string>("Dept_Name"),
+                          Description = entry.Field<string>("Description")
+                      };
+            return res.ToArray();
         }
         public Donor[] GetAllDonors()
         {
-            throw new NotImplementedException();
+            ParallelFetch("Donor", "Person");
+            var res = from entry in dataSet.Tables["Donor"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Donor_SSN") equals entry2.Field<int>("SSN")
+                      select new Donor()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          SSN = entry2.Field<int>("SSN"),
+                          Mail = entry2.Field<string>("Mail")
+                      };
+            return res.ToArray();
         }
         public Employee[] GetAllEmployees()
         {
-            throw new NotImplementedException();
+            ParallelFetch("Employee", "Person");
+            var res = from entry in dataSet.Tables["Employee"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Employee_SSN") equals entry2.Field<int>("SSN")
+                      select new Employee()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          SSN = entry2.Field<int>("SSN"),
+                          Mail = entry2.Field<string>("Mail"),
+                          Salary = entry.Field<int>("Salary")
+                      };
+            return res.ToArray();
         }
         public Item[] GetAllItems()
         {
-            throw new NotImplementedException();
+            ParallelFetch("Item", "MainCategory", "SubCategory", "Category");
+            var res = from entry in dataSet.Tables["Item"].AsEnumerable()
+                      select new Item()
+                      {
+                          Name = entry.Field<string>("Name_"),
+                          Description = entry.Field<string>("Description_"),
+                          Main = (from entry2 in dataSet.Tables["MainCategory"].AsEnumerable()
+                                  join entry3 in dataSet.Tables["Category"].AsEnumerable()
+                                  on entry2.Field<string>("Name_") equals entry3.Field<string>("Name_")
+                                  where entry2.Field<string>("Name_") == entry.Field<string>("MainName")
+                                  select new MainCategory()
+                                  {
+                                      Name = entry.Field<string>("MainName"),
+                                      Description = entry3.Field<string>("Descripiton_")
+                                  }).SingleOrDefault(),
+                          Sub = (from entry2 in dataSet.Tables["SubCategory"].AsEnumerable()
+                                 join entry3 in dataSet.Tables["Category"].AsEnumerable()
+                                 on entry2.Field<string>("Name_") equals entry3.Field<string>("Name_")
+                                 where entry2.Field<string>("Name_") == entry.Field<string>("MainName")
+                                 select new SubCategory()
+                                 {
+                                     Name = entry.Field<string>("MainName"),
+                                     Description = entry3.Field<string>("Descripiton_")
+                                 }).SingleOrDefault()
+                      };
+            return res.ToArray();
         }
         public MainCategory[] GetAllMainCategories()
         {
-            throw new NotImplementedException();
+            ParallelFetch("MainCategory", "Category");
+            var res = from entry in dataSet.Tables["MainCategory"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Category"].AsEnumerable()
+                      on entry.Field<string>("Name_") equals entry2.Field<string>("Name_")
+                      select new MainCategory()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          Description = entry2.Field<string>("Descripiton_")
+                      };
+            return res.ToArray();
         }
         public Person[] GetAllPersons()
         {
-            throw new NotImplementedException();
+            FetchTable("Person");
+            var res = from entry in dataSet.Tables["Person"].AsEnumerable()
+                      select new Person()
+                      {
+                          Name = entry.Field<string>("Name_"),
+                          Mail = entry.Field<string>("Mail"),
+                          SSN = entry.Field<int>("SSN")
+                      };
+            return res.ToArray();
         }
         public Recepient[] GetAllRecepients()
         {
-            throw new NotImplementedException();
+            ParallelFetch("Recepient", "Person");
+            var res = from entry in dataSet.Tables["Recepient"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Recepient_SSN") equals entry2.Field<int>("SSN")
+                      select new Recepient()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          SSN = entry2.Field<int>("SSN"),
+                          Mail = entry2.Field<string>("Mail")
+                      };
+            return res.ToArray();
         }
         public SubCategory[] GetAllSubCategories()
         {
-            throw new NotImplementedException();
+            ParallelFetch("SubCategory", "Category");
+            var res = from entry in dataSet.Tables["SubCategory"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Category"].AsEnumerable()
+                      on entry.Field<string>("Name_") equals entry2.Field<string>("Name_")
+                      select new SubCategory()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          Description = entry2.Field<string>("Descripiton_")
+                      };
+            return res.ToArray();
         }
         public Volunteer[] GetAllVolunteers()
         {
-            throw new NotImplementedException();
+            ParallelFetch("Volunteer", "Person");
+            var res = from entry in dataSet.Tables["Volunteer"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Volunteer_SSN") equals entry2.Field<int>("SSN")
+                      select new Volunteer()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          SSN = entry2.Field<int>("SSN"),
+                          Mail = entry2.Field<string>("Mail")
+                      };
+            return res.ToArray();
         }
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
-            throw new NotImplementedException();
+            ParallelFetch("Beneficiary", "Person", "Benefit_From");
+            var res = from entry in dataSet.Tables["Beneficiary"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Beneficiary_SSN") equals entry2.Field<int>("SSN")
+                      join entry3 in dataSet.Tables["Benefit_From"].AsEnumerable()
+                      on entry.Field<int>("Beneficiary_SSN") equals entry3.Field<int>("Beneficiary_SSN")
+                      where entry3.Field<int>("Campaign_ID") == campaign.ID
+                      select new Beneficiary()
+                      {
+                          Name = entry2.Field<string>("Name_"),
+                          Mail = entry2.Field<string>("Mail"),
+                          SSN = entry2.Field<int>("SSN")
+                      };
+            return res.ToArray();
         }
-        public Department[] GetDepartmentsInWhich(Employee employee)
+        public Department GetDepartmentOf(Employee employee)
         {
-            throw new NotImplementedException();
+            ParallelFetch("Employee", "Department");
+            var res = from entry in dataSet.Tables["Employee"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Department"].AsEnumerable()
+                      on entry.Field<string>("Department_Name") equals entry2.Field<string>("Dept_Name")
+                      select new Department()
+                      {
+                          DeptName = entry2.Field<string>("Dept_Name"),
+                          Description = entry2.Field<string>("Description")
+                      };
+            return res.Single();
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {

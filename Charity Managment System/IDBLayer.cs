@@ -43,7 +43,7 @@ namespace CharityManagmentSystem
         Item[] GetItemsOf(MainCategory mainCategory);
         Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory);
         //Department
-        Department[] GetDepartmentsInWhich(Employee employee);
+        Department GetDepartmentOf(Employee employee);
         //Basic Insertions
         void InsertPersons(params Person[] people);
         void InsertBeneficiary(params Beneficiary[] beneficiaries);
