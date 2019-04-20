@@ -6,26 +6,69 @@ using System.Threading.Tasks;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 using CharityManagmentSystem.Models;
+using System.Data;
 
 namespace CharityManagmentSystem
 {
+    /// <summary>
+    /// Downloads and saves tables into memory, mainuplates them in memory then uploads changes back to database
+    /// </summary>
     class DBDisconnectedMode : IDBLayer
     {
+        DataSet dataSet;
+        readonly Dictionary<string, OracleDataAdapter> adapters;
         public DBDisconnectedMode()
         {
-
+            adapters = new Dictionary<string, OracleDataAdapter>();
         }
+        /// <summary>
+        /// Flush exisiting dataSet and make a new one
+        /// </summary>
         public void InitializeConnection()
         {
-            throw new NotImplementedException();
+            TerminateConnection();
+            dataSet = new DataSet();
         }
+        /// <summary>
+        /// Flush exisiting dataSet then clear it and the adapters
+        /// </summary>
         public void TerminateConnection()
         {
-            throw new NotImplementedException();
+            foreach(var adapter in adapters.Values)
+            {
+                new OracleCommandBuilder(adapter);
+                adapter.Update(dataSet);
+            }
+            adapters.Clear();
+            dataSet = null;
+        }
+        /// <summary>
+        /// Check if the dataSet has the specificed table. If not, download it.
+        /// </summary>
+        /// <param name="tableName">The name of the table to be checked</param>
+        public void FetchTable(string tableName)
+        {
+            if(!adapters.ContainsKey(tableName))
+            {
+                var adapter = new OracleDataAdapter($"SELECT * FROM {tableName}", DBGlobals.ConnectionString);
+                adapter.Fill(dataSet, tableName);
+                adapters.Add(tableName, adapter);
+            }
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            throw new NotImplementedException();
+            FetchTable("Beneficiary");
+            FetchTable("Person");
+            var res = from entry in dataSet.Tables["Beneficiary"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Person"].AsEnumerable()
+                      on entry.Field<int>("Beneficiary_SSN") equals entry2.Field<int>("SSN")
+                      select new Beneficiary()
+                      {
+                         Name = entry2.Field<string>("Name_"),
+                         SSN = entry2.Field<int>("SSN"),
+                         Mail = entry2.Field<string>("Mail")
+                      };
+            return res.ToArray();
         }
         public Campaign[] GetAllCampaigns()
         {

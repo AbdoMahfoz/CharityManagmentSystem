@@ -8,6 +8,6 @@ namespace CharityManagmentSystem.Models
 {
     public class SubCategory : Category
     {
-        MainCategory Main;
+        public MainCategory Main;
     }
 }

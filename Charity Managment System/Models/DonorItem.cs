@@ -8,8 +8,8 @@ namespace CharityManagmentSystem.Models
 {
     public class DonorItem
     {
-        Donor Donor;
-        Item item;
-        int Count;
+        public Donor Donor;
+        public Item item;
+        public int Count;
     }
 }

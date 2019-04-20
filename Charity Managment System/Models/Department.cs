@@ -8,7 +8,7 @@ namespace CharityManagmentSystem.Models
 {
     public class Department
     {
-        string DeptName;
-        string Description;
+        public string DeptName;
+        public string Description;
     }
 }

@@ -8,9 +8,9 @@ namespace CharityManagmentSystem.Models
 {
     public class Item
     {
-         string Name;
-         string Description;
-         MainCategory Main;
-         SubCategory Sub;
+         public string Name;
+         public string Description;
+         public MainCategory Main;
+         public SubCategory Sub;
     }
 }
