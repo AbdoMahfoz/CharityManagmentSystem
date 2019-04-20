@@ -8,7 +8,7 @@ namespace CharityManagmentSystem.Models
 {
     public class Category
     {
-        string Name;
-        string Description;
+        public string Name;
+        public string Description;
     }
 }

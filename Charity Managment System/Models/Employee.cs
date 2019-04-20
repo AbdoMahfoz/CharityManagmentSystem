@@ -8,6 +8,6 @@ namespace CharityManagmentSystem.Models
 {
     public class Employee : Person
     {
-        int Salary;
+        public int Salary;
     }
 }
