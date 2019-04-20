@@ -44,5 +44,30 @@ namespace CharityManagmentSystem
         Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory);
         //Department
         Department[] GetDepartmentsInWhich(Employee employee);
+        //Basic Insertions
+        void InsertPersons(params Person[] people);
+        void InsertBeneficiary(params Beneficiary[] beneficiaries);
+        void InsertDonors(params Donor[] donors);
+        void InsertReceipeients(params Recepient[] recepients);
+        void InsertVolunteers(params Volunteer[] volunteers);
+        void InsertEmployee(params Employee[] employees);
+        void InsertCampaign(params Campaign[] campaigns);
+        void InsertCategories(params Category[] categories);
+        void InsertDepartments(params Department[] departments);
+        void InsertItems(params Item[] items);
+        //Associations
+        void LinkItemWithDonor(DonorItem item);
+        void LinkItemWithRecepient(RecepientItem item);
+        void LinkCampaignWithEmployee(Campaign campaign, Employee employee);
+        //Updates
+        void UpdateEntity<T>(T Entity); //Tricky Tricky :D
+        void UpdateLink(DonorItem item);
+        void UpdateLink(RecepientItem item);
+        void UpdateLink(Campaign campaign, Employee employee);
+        //Deletions
+        void DeleteEntity<T>(T Entity); //Tricky too but easier than update :D
+        void DeleteLink(DonorItem item);
+        void DeleteLink(RecepientItem item);
+        void DeleteLink(Campaign campaign, Employee employee);
     }
 }
