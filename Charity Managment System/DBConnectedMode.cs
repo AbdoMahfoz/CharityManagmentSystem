@@ -41,7 +41,7 @@ namespace CharityManagmentSystem
             }
             return res;
         }
-        private T[] FillList<T>(string cmdstr) where T : new()
+        private T[] FillList<T>(string cmdstr, params KeyValuePair<string, object>[] args) where T : new()
         {
             OracleCommand cmd = new OracleCommand
             {
@@ -49,6 +49,10 @@ namespace CharityManagmentSystem
                 CommandText = cmdstr,
                 CommandType = CommandType.Text
             };
+            foreach(var arg in args)
+            {
+                cmd.Parameters.Add(arg.Key, arg.Value);
+            }
             OracleDataReader reader = cmd.ExecuteReader();
             List<T> list = new List<T>();
             while (reader.Read())
@@ -216,6 +220,10 @@ namespace CharityManagmentSystem
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
+            //Example
+            FillList<Donor>("Some select query",
+                            new KeyValuePair<string, object>("hi", 2),
+                            new KeyValuePair<string, object>("hello", DateTime.Now);
             throw new NotImplementedException();
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
