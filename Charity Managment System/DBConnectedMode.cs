@@ -183,7 +183,8 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsReceivedBy(Recepient recepient)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select ItemName from Receives_From RF where RF.Recipient_SSN = :RSSN",
+                            new KeyValuePair<string, object>("RSSN", recepient.SSN));
         }
         public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
         {
