@@ -75,8 +75,8 @@ namespace CharityManagmentSystem
         void SetCategoryAsSub(Category category, MainCategory mainCategory);
         //Updates
         void UpdateEntity<T>(T Entity); //Tricky Tricky :D
-        void UpdateLink(DonorItem donorItem);
-        void UpdateLink(RecepientItem recepientItem);
+        void UpdateLink(DonorItem donorItem, int Count);
+        void UpdateLink(RecepientItem recepientItem, int Count);
         //Deletions
         void DeleteEntity<T>(T Entity); //Tricky too but easier than update :D
         void DeleteLink(DonorItem item);

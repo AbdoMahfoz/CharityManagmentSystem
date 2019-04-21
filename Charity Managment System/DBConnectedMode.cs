@@ -350,11 +350,11 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(DonorItem item)
+        public void UpdateLink(DonorItem item, int Count)
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(RecepientItem item)
+        public void UpdateLink(RecepientItem item, int Count)
         {
             throw new NotImplementedException();
         }

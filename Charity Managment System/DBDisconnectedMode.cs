@@ -443,11 +443,11 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(DonorItem donorItem)
+        public void UpdateLink(DonorItem donorItem, int Count)
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(RecepientItem recepientItem)
+        public void UpdateLink(RecepientItem recepientItem, int Count)
         {
             throw new NotImplementedException();
         }
