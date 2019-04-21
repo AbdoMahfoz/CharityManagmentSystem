@@ -296,43 +296,143 @@ namespace CharityManagmentSystem
         }
         public void InsertPersons(params Person[] people)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < people.Length; i++)
+            {
+
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into Person values (:SSN,:Name,:Mail)";
+                cmd.Parameters.Add("SSN", people[i].SSN);
+                cmd.Parameters.Add("Name", people[i].Name);
+                cmd.Parameters.Add("Mail", people[i].Mail);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            throw new NotImplementedException();
+
+            InitializeConnection();
+            for (int i = 0; i < beneficiaries.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into beneficiary values (:SSN)";
+                cmd.Parameters.Add("SSN", beneficiaries[i].SSN);
+
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertDonors(params Donor[] donors)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < donors.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into donor values (:SSN)";
+                cmd.Parameters.Add("SSN", donors[i].SSN);
+
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < recepients.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into recepient values (:SSN)";
+                cmd.Parameters.Add("SSN", recepients[i].SSN);
+
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < volunteers.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into volunteer values (:SSN)";
+                cmd.Parameters.Add("SSN", volunteers[i].SSN);
+
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+
+            for (int i = 0; i < employees.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into employee values (:SSN)";
+                cmd.Parameters.Add("SSN", employees[i].SSN);
+
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < campaigns.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into Campaign values (:ID,:Date,:Name,:Description,:Location,:Budget)";
+                cmd.Parameters.Add("Id", campaigns[i].ID);
+                cmd.Parameters.Add("Date", campaigns[i].Date);
+                cmd.Parameters.Add("Name", campaigns[i].Name);
+                cmd.Parameters.Add("Description", campaigns[i].Description);
+                cmd.Parameters.Add("Location", campaigns[i].Location);
+                cmd.Parameters.Add("Budget", campaigns[i].Budget);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertCategories(params Category[] categories)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < categories.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into category values (:Name,:Description)";
+                cmd.Parameters.Add("Name", categories[i].Name);
+                cmd.Parameters.Add("Description", categories[i].Description);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertDepartments(params Department[] departments)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < departments.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into Department values (:Name,:Description)";
+                cmd.Parameters.Add("Name", departments[i].DeptName);
+                cmd.Parameters.Add("Description", departments[i].Description);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertItems(params Item[] items)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            for (int i = 0; i < items.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "insert into Item values (:Name,:Main,:Description,:Sub)";
+                cmd.Parameters.Add("Name", items[i].Name);
+                cmd.Parameters.Add("Main", items[i].Main);
+                cmd.Parameters.Add("Description", items[i].Description);
+                cmd.Parameters.Add("Sub", items[i].Sub);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void LinkItemWithDonor(DonorItem item)
         {
