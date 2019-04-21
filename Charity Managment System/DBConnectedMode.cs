@@ -167,7 +167,8 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select ItemName from Receives_From RF where RF.Campaign_ID = :IDT",
+                            new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
         {
