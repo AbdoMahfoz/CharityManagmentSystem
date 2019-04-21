@@ -140,7 +140,20 @@ namespace CharityManagmentSystem
         }
         public Employee GetEmployeeManaging(Campaign campaign)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "select Employee_SSN from Campaign C where C.ID_ = :IDT",
+                CommandType = CommandType.Text
+            };
+            cmd.Parameters.Add("IDT", campaign.ID);
+            OracleDataReader reader = cmd.ExecuteReader();
+            Employee employee = new Employee();
+            if (reader.Read())
+            {
+                employee.SSN = int.Parse(reader[0].ToString());
+            }
+            return employee;
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
