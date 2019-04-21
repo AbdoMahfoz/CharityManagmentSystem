@@ -81,7 +81,6 @@ namespace CharityManagmentSystem
         void DeleteEntity<T>(T Entity); //Tricky too but easier than update :D
         void DeleteLink(DonorItem item);
         void DeleteLink(RecepientItem item);
-        void FireEmployeeFromDepartment(Employee employee, Department department);
         void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign);
         void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign);
         void UnSetCategoryAsMain(MainCategory category);

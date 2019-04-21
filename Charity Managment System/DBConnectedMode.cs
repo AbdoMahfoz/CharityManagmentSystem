@@ -410,14 +410,6 @@ namespace CharityManagmentSystem
             cmd.Parameters.Add("name", item.Item.Name);
             cmd.ExecuteNonQuery();
         }
-        public void FireEmployeeFromDepartment(Employee employee, Department department)
-        {
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "delete from campaign where employee_snn=:ssn";
-            cmd.Parameters.Add("ssn",employee.SSN);
-            cmd.ExecuteNonQuery();
-        }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
             OracleCommand cmd = new OracleCommand();
