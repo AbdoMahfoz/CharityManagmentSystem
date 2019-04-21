@@ -65,133 +65,42 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Beneficiary";
-            List<Beneficiary> benlist = new List<Beneficiary>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Beneficiary b = new Beneficiary();
-                b = FillObject<Beneficiary>(dr);
-                benlist.Add(b);
+            return FillList<Beneficiary>("select * from Beneficiary b, Person p where b.SSN = p.SSN");
 
-            }
-            dr.Close();
-            return benlist.ToArray();
         }
         public Campaign[] GetAllCampaigns()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Campaign";
-            List<Campaign> camplist = new List<Campaign>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Campaign b = new Campaign();
-                b = FillObject<Campaign>(dr);
-                camplist.Add(b);
+            return FillList<Campaign>("select * from Campaign");
 
-            }
-            dr.Close();
-            return camplist.ToArray();
         }
         public Category[] GetAllCategories()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Category";
-            List<Category> catlist = new List<Category>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Category b = new Category();
-                b = FillObject<Category>(dr);
-                catlist.Add(b);
+            return FillList<Category>("select * from Category");
 
-            }
-            dr.Close();
-            return catlist.ToArray();
         }
         public Department[] GetAllDepartments()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Department";
-            List<Department> deplist = new List<Department>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Department b = new Department();
-                b = FillObject<Department>(dr);
-                deplist.Add(b);
+            return FillList<Department>("select * from Department");
 
-            }
-            dr.Close();
-            return deplist.ToArray();
         }
         public Donor[] GetAllDonors()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Donor";
-            List<Donor> donlist = new List<Donor>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Donor b = new Donor();
-                b = FillObject<Donor>(dr);
-                donlist.Add(b);
+            return FillList<Donor>("select * from Donor d, Person p where d.SSN = p.SSN");
 
-            }
-            dr.Close();
-            return donlist.ToArray();
         }
         public Employee[] GetAllEmployees()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Employee";
-            List<Employee> emplist = new List<Employee>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Employee b = new Employee();
-                b = FillObject<Employee>(dr);
-                emplist.Add(b);
-
-            }
-            dr.Close();
-            return emplist.ToArray();
+            return FillList<Employee>("select * from Employee e, Person p where e.SSN = p.SSN");
         }
         public Item[] GetAllItems()
         {
-            InitializeConnection();
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = "select * from Item";
-            List<Item> itemlist = new List<Item>();
-            OracleDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                Item b = new Item();
-                b = FillObject<Item>(dr);
-                itemlist.Add(b);
-
-            }
-            dr.Close();
-            return itemlist.ToArray();
+            //return FillList<Item>("select * from Item i, MainCategory MC,SubCategory SC "+
+            //  "where i.Name = MC.Name and i.Name = SC.Name");
+            throw new NotImplementedException();
         }
         public MainCategory[] GetAllMainCategories()
         {
-            return FillList<MainCategory>("select * from MainCategory");
+            return FillList<MainCategory>("select * from MainCategory MC ,Category C where MC.Name = C.Name");
         }
         public Person[] GetAllPersons()
         {
@@ -346,15 +255,38 @@ namespace CharityManagmentSystem
         }
         public void LinkItemWithDonor(DonorItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
+                $" Values({item.Donor.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
+                CommandType = CommandType.Text
+            };
+             cmd.ExecuteNonQuery();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
+                $" Values({item.Recipient.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"update Campaign set Employee_SSN={employee.SSN} where ID_={campaign.ID} ",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
         public void UpdateEntity<T>(T Entity)
         {
@@ -362,11 +294,27 @@ namespace CharityManagmentSystem
         }
         public void UpdateLink(DonorItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"update Donate_to set Count_={item.Count}" +
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
         public void UpdateLink(RecepientItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText =$"update Donate_to set Count_={item.Count}" +
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
