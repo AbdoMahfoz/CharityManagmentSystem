@@ -207,8 +207,8 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
-            return FillList<Beneficiary>("select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C " +
-                                         "where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
+            return FillList<Beneficiary>(@"select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C 
+                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
@@ -254,6 +254,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
         {
             throw new NotImplementedException();
@@ -282,6 +283,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        
         public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
         {
             throw new NotImplementedException();
@@ -386,51 +388,69 @@ namespace CharityManagmentSystem
         {
              OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "@delete from donate_to where donar_ssn=:ssn and" +
-                               "where ItemMainName=:MainName and where ItemSubName=:SubName and " +
-                               "where Name=:name";
+            cmd.CommandText = @"delete from donate_to where donar_ssn=:ssn and
+                                ItemMainName=:MainName and  ItemSubName=:SubName and 
+                                itemName=:name";
             cmd.Parameters.Add("ssn", item.Donor.SSN);
-            cmd.Parameters.Add("MainName", item.item.Main);
-            cmd.Parameters.Add("SubName", item.item.Sub);
-            cmd.Parameters.Add("name", item.item.Name);
+            cmd.Parameters.Add("MainName", item.Item.Main.Name);
+            cmd.Parameters.Add("SubName", item.Item.Sub.Name);
+            cmd.Parameters.Add("name", item.Item.Name);
             cmd.ExecuteNonQuery();
         }
         public void DeleteLink(RecepientItem item)
         {
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "@delete from receives_from where recipient_ssn=:ssn and" +
-                               "where MainName=:MainName and where SubName=:SubName and " +
-                               "where Name=:name";
+            cmd.CommandText = @"delete from receives_from  recipient_ssn=:ssn and
+                                itemMainName=:MainName and  itemSubName=:SubName and 
+                               where itemName=:name";
             cmd.Parameters.Add("ssn", item.Recipient.SSN);
-            cmd.Parameters.Add("MainName", item.item.Main);
-            cmd.Parameters.Add("SubName", item.item.Sub);
-            cmd.Parameters.Add("name", item.item.Name);
+            cmd.Parameters.Add("MainName", item.Item.Main.Name);
+            cmd.Parameters.Add("SubName", item.Item.Sub.Name);
+            cmd.Parameters.Add("name", item.Item.Name);
             cmd.ExecuteNonQuery();
         }
         public void FireEmployeeFromDepartment(Employee employee, Department department)
         {
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "@delete from campaign where employee_snn=:ssn";
+            cmd.CommandText = "delete from campaign where employee_snn=:ssn";
             cmd.Parameters.Add("ssn",employee.SSN);
             cmd.ExecuteNonQuery();
         }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from volunteer_in where volunteer_SSN=:ssn and campaign_ID=:campaignID ";
+            cmd.Parameters.Add("ssn", volunteer.SSN);
+            cmd.Parameters.Add("campaignID", campaign.ID);
+            cmd.ExecuteNonQuery();
         }
         public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from benefit_from where beneficiary_SSN=:ssn and campaign_ID=:campaignID ";
+            cmd.Parameters.Add("ssn", beneficiary.SSN);
+            cmd.Parameters.Add("campaignID", campaign.ID);
+            cmd.ExecuteNonQuery();
         }
         public void UnSetCategoryAsMain(MainCategory category)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from maincategory where name_=:category ";
+            cmd.Parameters.Add("category", category.Name);
+            cmd.ExecuteNonQuery();
         }
         public void UnSetCategoryAsSub(SubCategory category)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from subcategory where name_=:category ";
+            cmd.Parameters.Add("category", category.Name);
+            cmd.ExecuteNonQuery();
         }
     }
 }
