@@ -134,7 +134,7 @@ namespace CharityManagmentSystem
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
         {
-            return FillList<DonorItem>("select * Donor_SSN from Donate_to DT , Item I where DT.Campaign_ID = :IDT and I.Name_ = :Namee",
+            return FillList<DonorItem>("select Donor_SSN from Donate_to DT , Item I where DT.Campaign_ID = :IDT and I.Name_ = :Namee",
                             new KeyValuePair<string, object>("IDT", campaign.ID),
                             new KeyValuePair<string, object>("Namee", item.Name));
         }
@@ -157,12 +157,13 @@ namespace CharityManagmentSystem
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
-            return FillList<Employee>("select * Employee_SSN from Employee E where E.Department_Name = :DN",
+            return FillList<Employee>("select Employee_SSN from Employee E where E.Department_Name = :DN",
                             new KeyValuePair<string, object>("DN", department.DeptName));
         }
         public Item[] GetItemsDonatedBy(Donor donor)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select ItemName from Donate_to DT where DT.Donor_SSN = :DN",
+                            new KeyValuePair<string, object>("DN", donor.SSN));
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
