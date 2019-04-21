@@ -245,15 +245,38 @@ namespace CharityManagmentSystem
         }
         public void LinkItemWithDonor(DonorItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,   ,ItemSubName)" +
+                " Values(Donor.Donor_SSN,Campaign.ID_,item.MainName,   ,item.ItemSubName,)",
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,   ,ItemSubName)" +
+                " Values(Recipient.Recipient_SSN,Campaign.ID_,item.MainName,   ,item.ItemSubName,)",
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "update Campaign set Employee_SSN=:employee.Employee_SSN where ID_=:campaign.ID_ ",
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
         }
         public void UpdateEntity<T>(T Entity)
         {
@@ -261,11 +284,26 @@ namespace CharityManagmentSystem
         }
         public void UpdateLink(DonorItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "update Donate_to set Count_=:       " +
+                "where Name_=:item.Name_,MainName=:item.MainName,SubName:=item.SubName",
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
         }
         public void UpdateLink(RecepientItem item)
         {
-            throw new NotImplementedException();
+            InitializeConnection();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "update Receives_From set Count_=:                  ",
+                CommandType = CommandType.Text
+            };
+            OracleDataReader reader = cmd.ExecuteReader();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
