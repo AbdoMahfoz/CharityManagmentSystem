@@ -463,10 +463,6 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void FireEmployeeFromDepartment(Employee employee, Department department)
-        {
-            throw new NotImplementedException();
-        }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
             throw new NotImplementedException();
