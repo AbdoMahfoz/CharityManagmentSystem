@@ -307,11 +307,25 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Name", people[i].Name);
                 cmd.Parameters.Add("Mail", people[i].Mail);
                 cmd.ExecuteNonQuery();
+                //insert the person locations
+                for (int j = 0; j < people[i].Location.Length; j++)
+                {
+                    OracleCommand cmd1 = new OracleCommand();
+                cmd1.Connection = conn;
+                cmd1.CommandText = "insert into Person_Location values (:SSN,:Location)";
+                cmd1.Parameters.Add("SSN", people[i].SSN);
+                cmd1.Parameters.Add("Location", people[i].Location[j]);
+                    cmd1.ExecuteNonQuery();
+                }
+               
+                
             }
+            TerminateConnection();
+            
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-
+            InsertPersons( beneficiaries);
             InitializeConnection();
             for (int i = 0; i < beneficiaries.Length; i++)
             {
@@ -319,12 +333,13 @@ namespace CharityManagmentSystem
                 cmd.Connection = conn;
                 cmd.CommandText = "insert into beneficiary values (:SSN)";
                 cmd.Parameters.Add("SSN", beneficiaries[i].SSN);
-
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertDonors(params Donor[] donors)
         {
+            InsertPersons(donors);
             InitializeConnection();
             for (int i = 0; i < donors.Length; i++)
             {
@@ -335,9 +350,11 @@ namespace CharityManagmentSystem
 
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
+            InsertPersons(recepients);
             InitializeConnection();
             for (int i = 0; i < recepients.Length; i++)
             {
@@ -348,9 +365,11 @@ namespace CharityManagmentSystem
 
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
+            InsertPersons(volunteers);
             InitializeConnection();
             for (int i = 0; i < volunteers.Length; i++)
             {
@@ -361,20 +380,24 @@ namespace CharityManagmentSystem
 
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertEmployee(params Employee[] employees)
         {
+            InsertPersons(employees);
             InitializeConnection();
 
             for (int i = 0; i < employees.Length; i++)
             {
                 OracleCommand cmd = new OracleCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = "insert into employee values (:SSN)";
+                cmd.CommandText = "insert into employee values (:SSN,:Salary)";
                 cmd.Parameters.Add("SSN", employees[i].SSN);
+                cmd.Parameters.Add("Salary", employees[i].Salary);
 
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
@@ -392,6 +415,7 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Budget", campaigns[i].Budget);
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertCategories(params Category[] categories)
         {
@@ -405,6 +429,7 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Description", categories[i].Description);
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertDepartments(params Department[] departments)
         {
@@ -418,6 +443,7 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Description", departments[i].Description);
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
         public void InsertItems(params Item[] items)
         {
@@ -433,7 +459,9 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Sub", items[i].Sub);
                 cmd.ExecuteNonQuery();
             }
+            TerminateConnection();
         }
+
         public void LinkItemWithDonor(DonorItem item)
         {
             throw new NotImplementedException();
