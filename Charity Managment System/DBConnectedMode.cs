@@ -249,7 +249,7 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
                 $" Values({item.Donor.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
@@ -261,7 +261,7 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
                 $" Values({item.Recipient.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
@@ -289,7 +289,7 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText = $"update Donate_to set Count_={item.Count}" +
-                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
@@ -301,7 +301,7 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText =$"update Donate_to set Count_={item.Count}" +
-                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
