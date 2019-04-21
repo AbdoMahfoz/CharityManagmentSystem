@@ -125,19 +125,18 @@ namespace CharityManagmentSystem
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
-            return FillList<Department>("select dept_name,description from departmrnt dep , Employee emp where dep.dept_name=emp.department_name");
+            return FillList<Department>("select dept_name,description from department dep , Employee emp where dep.dept_name=emp.department_name");
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
-            //Example
-            FillList<Donor>("Some select query",
-                            new KeyValuePair<string, object>("hi", 2),
-                            new KeyValuePair<string, object>("hello", DateTime.Now);
-            throw new NotImplementedException();
+            return FillList<Donor>("select * Donor_SSN from Donate_to DT where DT.Campaign_ID = :IDT",
+                            new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
         {
-            throw new NotImplementedException();
+            return FillList<DonorItem>("select * Donor_SSN from Donate_to DT , Item I where DT.Campaign_ID = :IDT and I.Name_ = :Namee",
+                            new KeyValuePair<string, object>("IDT", campaign.ID),
+                            new KeyValuePair<string, object>("Namee", item.Name));
         }
         public Employee GetEmployeeManaging(Campaign campaign)
         {
