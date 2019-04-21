@@ -9,7 +9,8 @@ namespace CharityManagmentSystem.Models
     public class RecepientItem
     {
         public Recepient Recipient;
-        public Item item;
+        public Item Item;
+        public Campaign Campaign;
         public int Count;
     }
 }

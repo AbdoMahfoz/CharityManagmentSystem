@@ -290,6 +290,14 @@ namespace CharityManagmentSystem
                       };
             return res.Single();
         }
+        public Employee[] GetEmployeesWorkingIn(Department department)
+        {
+            throw new NotImplementedException();
+        }
+        public Employee GetEmployeeManaging(Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
             throw new NotImplementedException();
@@ -298,11 +306,19 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public Employee GetEmployeeManaging(Campaign campaign)
+        public Volunteer[] GetVolunteersOf(Campaign campaign)
         {
             throw new NotImplementedException();
         }
-        public Employee[] GetEmployeesWorkingIn(Department department)
+        public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
+        {
+            throw new NotImplementedException();
+        }
+        public Item[] GetItemsReceivedBy(Recepient recepient)
         {
             throw new NotImplementedException();
         }
@@ -322,19 +338,32 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public Item[] GetItemsReceivedBy(Recepient recepient)
+
+        public Campaign[] GetCampaginsManagedBy(Employee employee)
         {
             throw new NotImplementedException();
         }
-        public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
+        public Campaign[] GetCampaignsOf(Volunteer volunteer)
         {
             throw new NotImplementedException();
         }
-        public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
+        public Campaign[] GetCampaignsOf(Donor donor)
         {
             throw new NotImplementedException();
         }
-        public Volunteer[] GetVolunteersOf(Campaign campaign)
+        public Campaign[] GetCampaignsOf(Recepient recepient)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
+        {
+            throw new NotImplementedException();
+        }
+        public DonorItem[] GetDonorsOf(Item item)
+        {
+            throw new NotImplementedException();
+        }
+        public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
         {
             throw new NotImplementedException();
         }
@@ -386,7 +415,27 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void LinkCampaignWithEmployee(Campaign campaign, Employee employee)
+        public void SetCampaignManager(Campaign campaign, Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+        public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetEmployeeDepartment(Employee employee, Department department)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetCategoryAsMain(Category category)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
             throw new NotImplementedException();
         }
@@ -394,15 +443,11 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(DonorItem item)
+        public void UpdateLink(DonorItem donorItem)
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(RecepientItem item)
-        {
-            throw new NotImplementedException();
-        }
-        public void UpdateLink(Campaign campaign, Employee employee)
+        public void UpdateLink(RecepientItem recepientItem)
         {
             throw new NotImplementedException();
         }
@@ -418,7 +463,23 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void DeleteLink(Campaign campaign, Employee employee)
+        public void FireEmployeeFromDepartment(Employee employee, Department department)
+        {
+            throw new NotImplementedException();
+        }
+        public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void UnSetCategoryAsMain(MainCategory category)
+        {
+            throw new NotImplementedException();
+        }
+        public void UnSetCategoryAsSub(SubCategory category)
         {
             throw new NotImplementedException();
         }

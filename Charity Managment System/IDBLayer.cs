@@ -26,8 +26,15 @@ namespace CharityManagmentSystem
         //Employee
         Employee[] GetEmployeesWorkingIn(Department department);
         Employee GetEmployeeManaging(Campaign campaign);
+        //Campaign
+        Campaign[] GetCampaginsManagedBy(Employee employee);
+        Campaign[] GetCampaignsOf(Volunteer volunteer);
+        Campaign[] GetCampaignsOf(Donor donor);
+        Campaign[] GetCampaignsOf(Recepient recepient);
+        Campaign[] GetCampaignsOf(Beneficiary beneficiary);
         //Donor
         Donor[] GetDonorsDonatingTo(Campaign campaign);
+        DonorItem[] GetDonorsOf(Item item);
         DonorItem[] GetDonorsOf(Campaign campaign, Item item);
         //Volunteer
         Volunteer[] GetVolunteersOf(Campaign campaign);
@@ -44,6 +51,8 @@ namespace CharityManagmentSystem
         Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory);
         //Department
         Department GetDepartmentOf(Employee employee);
+        //Category
+        SubCategory[] GetSubCategoriesOf(MainCategory mainCategory);
         //Basic Insertions
         void InsertPersons(params Person[] people);
         void InsertBeneficiary(params Beneficiary[] beneficiaries);
@@ -58,16 +67,24 @@ namespace CharityManagmentSystem
         //Associations
         void LinkItemWithDonor(DonorItem item);
         void LinkItemWithRecepient(RecepientItem item);
-        void LinkCampaignWithEmployee(Campaign campaign, Employee employee);
+        void SetCampaignManager(Campaign campaign, Employee employee);
+        void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign);
+        void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign);
+        void SetEmployeeDepartment(Employee employee, Department department);
+        void SetCategoryAsMain(Category category);
+        void SetCategoryAsSub(Category category, MainCategory mainCategory);
         //Updates
         void UpdateEntity<T>(T Entity); //Tricky Tricky :D
-        void UpdateLink(DonorItem item);
-        void UpdateLink(RecepientItem item);
-        void UpdateLink(Campaign campaign, Employee employee);
+        void UpdateLink(DonorItem donorItem);
+        void UpdateLink(RecepientItem recepientItem);
         //Deletions
         void DeleteEntity<T>(T Entity); //Tricky too but easier than update :D
         void DeleteLink(DonorItem item);
         void DeleteLink(RecepientItem item);
-        void DeleteLink(Campaign campaign, Employee employee);
+        void FireEmployeeFromDepartment(Employee employee, Department department);
+        void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign);
+        void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign);
+        void UnSetCategoryAsMain(MainCategory category);
+        void UnSetCategoryAsSub(SubCategory category);
     }
 }
