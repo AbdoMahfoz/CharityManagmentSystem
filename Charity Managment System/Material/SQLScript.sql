@@ -27,7 +27,7 @@ Create Table Employee(
 
 Create Table Campaign(
 	ID_ NUMBER(10) Primary key, 
-	Employee_SSN Number(10) references Person, 
+	Employee_SSN Number(10) references Employee, 
 	Date_ Date Not null, 
 	Name_ VarChar2(20), 
 	Description_ VarChar2(150), 
@@ -85,20 +85,20 @@ Create Table Donate_to(
 	Donor_SSN Number(10) references Donor(Donor_SSN),
 	Campaign_ID Number(10) references Campaign(ID_),
 	ItemMainName VarChar2(20),
-	Description_ VarChar2(150),
+	ItemName VarChar2(20),
 	ItemSubName VarChar2(20),
 	Count_ Number(10),
-	constraint DonatePK Primary key (Donor_SSN, Campaign_ID, ItemMainName, ItemSubName),
-	constraint DonateFK Foreign key (ItemMainName, ItemSubName) REFERENCES Item(MainName, SubName)
+	constraint DonatePK Primary key (Donor_SSN, Campaign_ID, ItemMainName, ItemSubName, ItemName),
+	constraint DonateFK Foreign key (ItemName, ItemMainName, ItemSubName) REFERENCES Item(Name_, MainName, SubName)
 );
 
 Create Table Receives_From(
 	Recipient_SSN Number(10) references Recipient(Recipient_SSN), 
 	Campaign_ID Number(10) references Campaign(ID_), 
-	MainName VarChar2(20), 
-	Description_ VarChar2(150), 
-	SubName VarChar2(20), 
+	ItemMainName VarChar2(20), 
+	ItemName VarChar2(20), 
+	ItemSubName VarChar2(20), 
 	Count_ Number(10),
-	constraint ReceivesFrom primary key (Recipient_SSN, Campaign_ID, MainName, SubName), 
-	constraint ReceiveFromFK Foreign key (MainName, SubName) REFERENCES Item(MainName, SubName)
+	constraint ReceivesFromPK primary key (Recipient_SSN, Campaign_ID, ItemMainName, ItemSubName, ItemName), 
+	constraint ReceiveFromFK Foreign key (ItemName, ItemMainName, ItemSubName) REFERENCES Item(Name_, MainName, SubName)
 );
