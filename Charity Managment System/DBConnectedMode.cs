@@ -172,11 +172,14 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select ItemName from Receives_From RF where RF.ItemMainName = :IMN",
+                            new KeyValuePair<string, object>("IMN", mainCategory.Name));
         }
         public Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select ItemName from Receives_From RF where RF.ItemMainName = :IMN and RF.ItemSubName = :ISN",
+                            new KeyValuePair<string, object>("IMN", mainCategory.Name),
+                            new KeyValuePair<string, object>("ISN", subCategory.Name));
         }
         public Item[] GetItemsReceivedBy(Recepient recepient)
         {
