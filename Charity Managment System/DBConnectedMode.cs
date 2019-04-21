@@ -249,11 +249,11 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,   ,ItemSubName)" +
-                " Values(Donor.Donor_SSN,Campaign.ID_,item.MainName,   ,item.ItemSubName,)",
+                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                $" Values({item.Donor.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
-            OracleDataReader reader = cmd.ExecuteReader();
+             cmd.ExecuteNonQuery();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
@@ -261,11 +261,11 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,   ,ItemSubName)" +
-                " Values(Recipient.Recipient_SSN,Campaign.ID_,item.MainName,   ,item.ItemSubName,)",
+                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                $" Values({item.Recipient.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
-            OracleDataReader reader = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
@@ -273,10 +273,10 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "update Campaign set Employee_SSN=:employee.Employee_SSN where ID_=:campaign.ID_ ",
+                CommandText = $"update Campaign set Employee_SSN={employee.SSN} where ID_={campaign.ID} ",
                 CommandType = CommandType.Text
             };
-            OracleDataReader reader = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
         }
         public void UpdateEntity<T>(T Entity)
         {
@@ -288,11 +288,11 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "update Donate_to set Count_=:       " +
-                "where Name_=:item.Name_,MainName=:item.MainName,SubName:=item.SubName",
+                CommandText = $"update Donate_to set Count_={item.Count}" +
+                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
-            OracleDataReader reader = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
         }
         public void UpdateLink(RecepientItem item)
         {
@@ -300,10 +300,11 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "update Receives_From set Count_=:                  ",
+                CommandText =$"update Donate_to set Count_={item.Count}" +
+                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
-            OracleDataReader reader = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
