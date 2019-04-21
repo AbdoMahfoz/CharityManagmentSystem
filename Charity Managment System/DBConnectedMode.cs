@@ -157,7 +157,8 @@ namespace CharityManagmentSystem
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
-            throw new NotImplementedException();
+            return FillList<Employee>("select * Employee_SSN from Employee E where E.Department_Name = :DN",
+                            new KeyValuePair<string, object>("DN", department.DeptName));
         }
         public Item[] GetItemsDonatedBy(Donor donor)
         {
