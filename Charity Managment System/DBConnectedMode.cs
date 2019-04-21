@@ -282,7 +282,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(DonorItem item)
+        public void UpdateLink(DonorItem item, int Count)
         {
             InitializeConnection();
             OracleCommand cmd = new OracleCommand
@@ -294,7 +294,7 @@ namespace CharityManagmentSystem
             };
             cmd.ExecuteNonQuery();
         }
-        public void UpdateLink(RecepientItem item)
+        public void UpdateLink(RecepientItem item, int Count)
         {
             InitializeConnection();
             OracleCommand cmd = new OracleCommand
