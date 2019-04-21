@@ -327,15 +327,37 @@ namespace CharityManagmentSystem
         }
         public void DeleteLink(DonorItem item)
         {
-            throw new NotImplementedException();
+             OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "@delete from donate_to where donar_ssn=:ssn and" +
+                               "where ItemMainName=:MainName and where ItemSubName=:SubName and " +
+                               "where Name=:name";
+            cmd.Parameters.Add("ssn", item.Donor.SSN);
+            cmd.Parameters.Add("MainName", item.item.Main);
+            cmd.Parameters.Add("SubName", item.item.Sub);
+            cmd.Parameters.Add("name", item.item.Name);
+            cmd.ExecuteNonQuery();
         }
         public void DeleteLink(RecepientItem item)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "@delete from receives_from where recipient_ssn=:ssn and" +
+                               "where MainName=:MainName and where SubName=:SubName and " +
+                               "where Name=:name";
+            cmd.Parameters.Add("ssn", item.Recipient.SSN);
+            cmd.Parameters.Add("MainName", item.item.Main);
+            cmd.Parameters.Add("SubName", item.item.Sub);
+            cmd.Parameters.Add("name", item.item.Name);
+            cmd.ExecuteNonQuery();
         }
         public void DeleteLink(Campaign campaign, Employee employee)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "@delete from campaign where employee_snn=:ssn";
+            cmd.Parameters.Add("ssn",employee.SSN);
+            cmd.ExecuteNonQuery();
         }
         public void InitializeConnection()
         {
