@@ -13,6 +13,15 @@ namespace CharityManagmentSystem
     class DBConnectedMode : IDBLayer
     {
         OracleConnection conn;
+        public void InitializeConnection()
+        {
+            conn = new OracleConnection(DBGlobals.ConnectionString);
+            conn.Open();
+        }
+        public void TerminateConnection()
+        {
+            conn.Close();
+        }
         private T FillObject<T>(OracleDataReader reader) where T : new()
         {
             string[] list = new string[reader.FieldCount];
@@ -253,6 +262,38 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        public Department GetDepartmentOf(Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaginsManagedBy(Employee employee)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaignsOf(Volunteer volunteer)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaignsOf(Donor donor)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaignsOf(Recepient recepient)
+        {
+            throw new NotImplementedException();
+        }
+        public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
+        {
+            throw new NotImplementedException();
+        }
+        public DonorItem[] GetDonorsOf(Item item)
+        {
+            throw new NotImplementedException();
+        }
+        public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
+        {
+            throw new NotImplementedException();
+        }
         public void InsertPersons(params Person[] people)
         {
             throw new NotImplementedException();
@@ -301,7 +342,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void LinkCampaignWithEmployee(Campaign campaign, Employee employee)
+        public void SetCampaignManager(Campaign campaign, Employee employee)
         {
             throw new NotImplementedException();
         }
@@ -317,7 +358,23 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(Campaign campaign, Employee employee)
+        public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetEmployeeDepartment(Employee employee, Department department)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetCategoryAsMain(Category category)
+        {
+            throw new NotImplementedException();
+        }
+        public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
             throw new NotImplementedException();
         }
@@ -351,7 +408,7 @@ namespace CharityManagmentSystem
             cmd.Parameters.Add("name", item.item.Name);
             cmd.ExecuteNonQuery();
         }
-        public void DeleteLink(Campaign campaign, Employee employee)
+        public void FireEmployeeFromDepartment(Employee employee, Department department)
         {
             OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
@@ -359,14 +416,21 @@ namespace CharityManagmentSystem
             cmd.Parameters.Add("ssn",employee.SSN);
             cmd.ExecuteNonQuery();
         }
-        public void InitializeConnection()
+        public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            conn = new OracleConnection(DBGlobals.ConnectionString);
-            conn.Open();
+            throw new NotImplementedException();
         }
-        public void TerminateConnection()
+        public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            conn.Close();
+            throw new NotImplementedException();
+        }
+        public void UnSetCategoryAsMain(MainCategory category)
+        {
+            throw new NotImplementedException();
+        }
+        public void UnSetCategoryAsSub(SubCategory category)
+        {
+            throw new NotImplementedException();
         }
     }
 }
