@@ -320,11 +320,26 @@ namespace CharityManagmentSystem
         }
         public void SetCategoryAsMain(Category category)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"update MainCategory set MainCategory.Name_={category.Name}" +
+                $"where Category.Name_={category.Name}",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
+        
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"update SubCategory set SubCategory.Name_={category.Name},MainName={mainCategory.Name}" +
+                 $"where Category_.Name_={category.Name} and MainCategory.Name_={mainCategory.Name}",
+                CommandType = CommandType.Text
+            };
+            cmd.ExecuteNonQuery();
         }
         public void DeleteEntity<T>(T Entity)
         {
