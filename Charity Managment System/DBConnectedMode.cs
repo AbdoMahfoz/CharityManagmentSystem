@@ -109,9 +109,7 @@ namespace CharityManagmentSystem
         }
         public Item[] GetAllItems()
         {
-            //return FillList<Item>("select * from Item i, MainCategory MC,SubCategory SC "+
-            //  "where i.Name = MC.Name and i.Name = SC.Name");
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Item");
         }
         public MainCategory[] GetAllMainCategories()
         {
