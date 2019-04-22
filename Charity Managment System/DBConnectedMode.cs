@@ -296,13 +296,13 @@ namespace CharityManagmentSystem
         }
         public void InsertPersons(params Person[] people)
         {
-            InitializeConnection();
             for (int i = 0; i < people.Length; i++)
             {
-
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into Person values (:SSN,:Name,:Mail)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Person values (:SSN,:Name,:Mail)"
+                };
                 cmd.Parameters.Add("SSN", people[i].SSN);
                 cmd.Parameters.Add("Name", people[i].Name);
                 cmd.Parameters.Add("Mail", people[i].Mail);
@@ -311,102 +311,94 @@ namespace CharityManagmentSystem
                 for (int j = 0; j < people[i].Location.Length; j++)
                 {
                     OracleCommand cmd1 = new OracleCommand();
-                cmd1.Connection = conn;
-                cmd1.CommandText = "insert into Person_Location values (:SSN,:Location)";
-                cmd1.Parameters.Add("SSN", people[i].SSN);
-                cmd1.Parameters.Add("Location", people[i].Location[j]);
+                    cmd1.Connection = conn;
+                    cmd1.CommandText = "insert into Person_Location values (:SSN,:Location)";
+                    cmd1.Parameters.Add("SSN", people[i].SSN);
+                    cmd1.Parameters.Add("Location", people[i].Location[j]);
                     cmd1.ExecuteNonQuery();
                 }
-               
-                
             }
-            TerminateConnection();
-            
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            InsertPersons( beneficiaries);
-            InitializeConnection();
+            InsertPersons(beneficiaries);
             for (int i = 0; i < beneficiaries.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into beneficiary values (:SSN)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into beneficiary values (:SSN)"
+                };
                 cmd.Parameters.Add("SSN", beneficiaries[i].SSN);
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertDonors(params Donor[] donors)
         {
             InsertPersons(donors);
-            InitializeConnection();
             for (int i = 0; i < donors.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into donor values (:SSN)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into donor values (:SSN)"
+                };
                 cmd.Parameters.Add("SSN", donors[i].SSN);
-
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
             InsertPersons(recepients);
-            InitializeConnection();
             for (int i = 0; i < recepients.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into recepient values (:SSN)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into recepient values (:SSN)"
+                };
                 cmd.Parameters.Add("SSN", recepients[i].SSN);
-
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
             InsertPersons(volunteers);
-            InitializeConnection();
             for (int i = 0; i < volunteers.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into volunteer values (:SSN)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into volunteer values (:SSN)"
+                };
                 cmd.Parameters.Add("SSN", volunteers[i].SSN);
-
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertEmployee(params Employee[] employees)
         {
             InsertPersons(employees);
-            InitializeConnection();
-
             for (int i = 0; i < employees.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into employee values (:SSN,:Salary)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into employee values (:SSN,:Salary)"
+                };
                 cmd.Parameters.Add("SSN", employees[i].SSN);
                 cmd.Parameters.Add("Salary", employees[i].Salary);
-
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
-            InitializeConnection();
             for (int i = 0; i < campaigns.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into Campaign values (:ID,:Date,:Name,:Description,:Location,:Budget)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Campaign values (:ID,:Date,:Name,:Description,:Location,:Budget)"
+                };
                 cmd.Parameters.Add("Id", campaigns[i].ID);
                 cmd.Parameters.Add("Date", campaigns[i].Date);
                 cmd.Parameters.Add("Name", campaigns[i].Name);
@@ -415,53 +407,51 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Budget", campaigns[i].Budget);
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertCategories(params Category[] categories)
         {
-            InitializeConnection();
             for (int i = 0; i < categories.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into category values (:Name,:Description)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into category values (:Name,:Description)"
+                };
                 cmd.Parameters.Add("Name", categories[i].Name);
                 cmd.Parameters.Add("Description", categories[i].Description);
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertDepartments(params Department[] departments)
         {
-            InitializeConnection();
             for (int i = 0; i < departments.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into Department values (:Name,:Description)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Department values (:Name,:Description)"
+                };
                 cmd.Parameters.Add("Name", departments[i].DeptName);
                 cmd.Parameters.Add("Description", departments[i].Description);
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
         public void InsertItems(params Item[] items)
         {
-            InitializeConnection();
             for (int i = 0; i < items.Length; i++)
             {
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into Item values (:Name,:Main,:Description,:Sub)";
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Item values (:Name,:Main,:Description,:Sub)"
+                };
                 cmd.Parameters.Add("Name", items[i].Name);
-                cmd.Parameters.Add("Main", items[i].Main);
+                cmd.Parameters.Add("Main", items[i].Main.Name);
                 cmd.Parameters.Add("Description", items[i].Description);
-                cmd.Parameters.Add("Sub", items[i].Sub);
+                cmd.Parameters.Add("Sub", items[i].Sub.Name);
                 cmd.ExecuteNonQuery();
             }
-            TerminateConnection();
         }
-
         public void LinkItemWithDonor(DonorItem item)
         {
             throw new NotImplementedException();
