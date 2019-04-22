@@ -100,7 +100,7 @@ namespace CharityManagmentSystem
         }
         public MainCategory[] GetAllMainCategories()
         {
-            return FillList<MainCategory>("select * from MainCategory MC ,Category C where MC.Name = C.Name");
+            return FillList<MainCategory>("select * from MainCategory MC ,Category_ C where MC.Name_ = C.Name_");
         }
         public Person[] GetAllPersons()
         {
@@ -112,20 +112,23 @@ namespace CharityManagmentSystem
         }
         public SubCategory[] GetAllSubCategories()
         {
-            return FillList<SubCategory>("select * from SubCategory sub,category c where sub.name=c.name");
+            return FillList<SubCategory>("select * from SubCategory sub,category c where sub.name_=c.name_");
         }
         public Volunteer[] GetAllVolunteers()
         {
-            return FillList<Volunteer>("select * from Volunteer");
+            return FillList<Volunteer>("select * from Volunteer v,Person p where v.volunteer_ssn=p.ssn");
         }
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
-            return FillList<Beneficiary>(@"select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C 
-                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
+            return FillList<Beneficiary>(@"select beneficiary_ssn from Beneficiary b ,Benefit_from bf 
+                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=:campaign",
+                                         new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
-            return FillList<Department>("select dept_name,description from departmrnt dep , Employee emp where dep.dept_name=emp.department_name");
+            return FillList<Department>(@"select dept_name,description from departmrnt dep , Employee emp where emp.Department_Name = dep.Dept_Name
+                                                                                                          and   emp.Employee_SSN = :ssn",
+                                        new KeyValuePair<string, object>("ssn", employee.SSN));
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
