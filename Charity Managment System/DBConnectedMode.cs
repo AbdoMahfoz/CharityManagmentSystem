@@ -25,23 +25,38 @@ namespace CharityManagmentSystem
         private T FillObject<T>(OracleDataReader reader) where T : new()
         {
             string[] list = new string[reader.FieldCount];
-            for(int i = 0; i < reader.FieldCount; i++)
+            for (int i = 0; i < reader.FieldCount; i++)
             {
                 list[i] = reader.GetName(i);
             }
             T res = new T();
-            foreach(var Property in typeof(T).GetFields())
+            foreach (var Property in typeof(T).GetFields())
             {
                 string x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
-                if(!string.IsNullOrEmpty(x))
+                if (!string.IsNullOrEmpty(x))
                 {
                     Property.SetValue(res, reader[x]);
                 }
             }
+            if(typeof(T) == typeof(Item))
+            {
+                string x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "MainName"));
+                ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category c 
+                                                                    where mc.Name_ = c.Name_
+                                                                    and mc.Name_ = :n", 
+                                                                    new KeyValuePair<string, object>("n", reader[x]))[0];
+                x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "SubName"));
+                ((Item)(object)res).Sub = FillList<SubCategory>(@"select * from SubCategory mc, Category c 
+                                                                  where mc.Name_ = c.Name_
+                                                                  and mc.Name_ = :n",
+                                                                  new KeyValuePair<string, object>("n", reader[x]))[0];
+            }
             return res;
         }
-        private T[] FillList<T>(string cmdstr) where T : new()
+        private T[] FillList<T>(string cmdstr, params KeyValuePair<string, object>[] args) where T : new()
         {
             OracleCommand cmd = new OracleCommand
             {
@@ -49,6 +64,10 @@ namespace CharityManagmentSystem
                 CommandText = cmdstr,
                 CommandType = CommandType.Text
             };
+            foreach(var arg in args)
+            {
+                cmd.Parameters.Add(arg.Key, arg.Value);
+            }
             OracleDataReader reader = cmd.ExecuteReader();
             List<T> list = new List<T>();
             while (reader.Read())
@@ -90,9 +109,7 @@ namespace CharityManagmentSystem
         }
         public Item[] GetAllItems()
         {
-            //return FillList<Item>("select * from Item i, MainCategory MC,SubCategory SC "+
-            //  "where i.Name = MC.Name and i.Name = SC.Name");
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Item");
         }
         public MainCategory[] GetAllMainCategories()
         {
@@ -116,8 +133,8 @@ namespace CharityManagmentSystem
         }
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
-            return FillList<Beneficiary>("select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C " +
-                                         "where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
+            return FillList<Beneficiary>(@"select beneficiary_ssn from Beneficiary b ,Benefit_from bf , Campaign C 
+                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=C.campaign_id");
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
@@ -125,6 +142,10 @@ namespace CharityManagmentSystem
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
+            //Example
+            FillList<Donor>("Some select query",
+                            new KeyValuePair<string, object>("hi", 2),
+                            new KeyValuePair<string, object>("hello", DateTime.Now);
             throw new NotImplementedException();
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
@@ -163,6 +184,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
         {
             throw new NotImplementedException();
@@ -191,6 +213,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
+        
         public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
         {
             throw new NotImplementedException();
@@ -205,43 +228,161 @@ namespace CharityManagmentSystem
         }
         public void InsertPersons(params Person[] people)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < people.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Person values (:SSN,:Name,:Mail)"
+                };
+                cmd.Parameters.Add("SSN", people[i].SSN);
+                cmd.Parameters.Add("Name", people[i].Name);
+                cmd.Parameters.Add("Mail", people[i].Mail);
+                cmd.ExecuteNonQuery();
+                //insert the person locations
+                for (int j = 0; j < people[i].Location.Length; j++)
+                {
+                    OracleCommand cmd1 = new OracleCommand();
+                    cmd1.Connection = conn;
+                    cmd1.CommandText = "insert into Person_Location values (:SSN,:Location)";
+                    cmd1.Parameters.Add("SSN", people[i].SSN);
+                    cmd1.Parameters.Add("Location", people[i].Location[j]);
+                    cmd1.ExecuteNonQuery();
+                }
+            }
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            throw new NotImplementedException();
+            InsertPersons(beneficiaries);
+            for (int i = 0; i < beneficiaries.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into beneficiary values (:SSN)"
+                };
+                cmd.Parameters.Add("SSN", beneficiaries[i].SSN);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertDonors(params Donor[] donors)
         {
-            throw new NotImplementedException();
+            InsertPersons(donors);
+            for (int i = 0; i < donors.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into donor values (:SSN)"
+                };
+                cmd.Parameters.Add("SSN", donors[i].SSN);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
-            throw new NotImplementedException();
+            InsertPersons(recepients);
+            for (int i = 0; i < recepients.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into recepient values (:SSN)"
+                };
+                cmd.Parameters.Add("SSN", recepients[i].SSN);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
-            throw new NotImplementedException();
+            InsertPersons(volunteers);
+            for (int i = 0; i < volunteers.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into volunteer values (:SSN)"
+                };
+                cmd.Parameters.Add("SSN", volunteers[i].SSN);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            throw new NotImplementedException();
+            InsertPersons(employees);
+            for (int i = 0; i < employees.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into employee values (:SSN,:Salary)"
+                };
+                cmd.Parameters.Add("SSN", employees[i].SSN);
+                cmd.Parameters.Add("Salary", employees[i].Salary);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < campaigns.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Campaign values (:ID,:Date,:Name,:Description,:Location,:Budget)"
+                };
+                cmd.Parameters.Add("Id", campaigns[i].ID);
+                cmd.Parameters.Add("Date", campaigns[i].Date);
+                cmd.Parameters.Add("Name", campaigns[i].Name);
+                cmd.Parameters.Add("Description", campaigns[i].Description);
+                cmd.Parameters.Add("Location", campaigns[i].Location);
+                cmd.Parameters.Add("Budget", campaigns[i].Budget);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertCategories(params Category[] categories)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < categories.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into category values (:Name,:Description)"
+                };
+                cmd.Parameters.Add("Name", categories[i].Name);
+                cmd.Parameters.Add("Description", categories[i].Description);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertDepartments(params Department[] departments)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < departments.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Department values (:Name,:Description)"
+                };
+                cmd.Parameters.Add("Name", departments[i].DeptName);
+                cmd.Parameters.Add("Description", departments[i].Description);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void InsertItems(params Item[] items)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < items.Length; i++)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "insert into Item values (:Name,:Main,:Description,:Sub)"
+                };
+                cmd.Parameters.Add("Name", items[i].Name);
+                cmd.Parameters.Add("Main", items[i].Main.Name);
+                cmd.Parameters.Add("Description", items[i].Description);
+                cmd.Parameters.Add("Sub", items[i].Sub.Name);
+                cmd.ExecuteNonQuery();
+            }
         }
         public void LinkItemWithDonor(DonorItem item)
         {
@@ -249,7 +390,7 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                CommandText = $"insert into  Donate_to (Donor_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
                 $" Values({item.Donor.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
@@ -261,7 +402,7 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,Name_,ItemSubName)" +
+                CommandText = $"insert into  Receives_From (Recipient_SSN,Campaign_ID,ItemMainName,ItemName,ItemSubName)" +
                 $" Values({item.Recipient.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
@@ -289,7 +430,7 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText = $"update Donate_to set Count_={item.Count}" +
-                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
@@ -301,7 +442,7 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText =$"update Donate_to set Count_={item.Count}" +
-                $"where Name_={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
@@ -347,31 +488,63 @@ namespace CharityManagmentSystem
         }
         public void DeleteLink(DonorItem item)
         {
-            throw new NotImplementedException();
+             OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = @"delete from donate_to where donar_ssn=:ssn and
+                                ItemMainName=:MainName and  ItemSubName=:SubName and 
+                                itemName=:name";
+            cmd.Parameters.Add("ssn", item.Donor.SSN);
+            cmd.Parameters.Add("MainName", item.Item.Main.Name);
+            cmd.Parameters.Add("SubName", item.Item.Sub.Name);
+            cmd.Parameters.Add("name", item.Item.Name);
+            cmd.ExecuteNonQuery();
         }
         public void DeleteLink(RecepientItem item)
         {
-            throw new NotImplementedException();
-        }
-        public void FireEmployeeFromDepartment(Employee employee, Department department)
-        {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = @"delete from receives_from  recipient_ssn=:ssn and
+                                itemMainName=:MainName and  itemSubName=:SubName and 
+                               where itemName=:name";
+            cmd.Parameters.Add("ssn", item.Recipient.SSN);
+            cmd.Parameters.Add("MainName", item.Item.Main.Name);
+            cmd.Parameters.Add("SubName", item.Item.Sub.Name);
+            cmd.Parameters.Add("name", item.Item.Name);
+            cmd.ExecuteNonQuery();
         }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from volunteer_in where volunteer_SSN=:ssn and campaign_ID=:campaignID ";
+            cmd.Parameters.Add("ssn", volunteer.SSN);
+            cmd.Parameters.Add("campaignID", campaign.ID);
+            cmd.ExecuteNonQuery();
         }
         public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from benefit_from where beneficiary_SSN=:ssn and campaign_ID=:campaignID ";
+            cmd.Parameters.Add("ssn", beneficiary.SSN);
+            cmd.Parameters.Add("campaignID", campaign.ID);
+            cmd.ExecuteNonQuery();
         }
         public void UnSetCategoryAsMain(MainCategory category)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from maincategory where name_=:category ";
+            cmd.Parameters.Add("category", category.Name);
+            cmd.ExecuteNonQuery();
         }
         public void UnSetCategoryAsSub(SubCategory category)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "delete from subcategory where name_=:category ";
+            cmd.Parameters.Add("category", category.Name);
+            cmd.ExecuteNonQuery();
         }
     }
 }
