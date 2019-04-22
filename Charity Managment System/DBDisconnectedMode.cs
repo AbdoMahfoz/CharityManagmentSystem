@@ -99,12 +99,12 @@ namespace CharityManagmentSystem
                     Name = rows[0].Field<string>("Name_"),
                     Description = rows[0].Field<string>("Description_"),
                     Main = (from entry3 in dataSet.Tables["MainCategory"].AsEnumerable()
-                            join entry4 in dataSet.Tables["Category"].AsEnumerable()
+                            join entry4 in dataSet.Tables["Category_"].AsEnumerable()
                             on entry3.Field<string>("Name_") equals entry4.Field<string>("Name_")
                             where entry3.Field<string>("Name_") == rows[0].Field<string>("MainName")
                             select QuerySelect<MainCategory>(entry3)).SingleOrDefault(),
                     Sub = (from entry3 in dataSet.Tables["SubCategory"].AsEnumerable()
-                           join entry4 in dataSet.Tables["Category"].AsEnumerable()
+                           join entry4 in dataSet.Tables["Category_"].AsEnumerable()
                            on entry3.Field<string>("Name_") equals entry4.Field<string>("Name_")
                            where entry3.Field<string>("Name_") == rows[0].Field<string>("SubName")
                            select QuerySelect<SubCategory>(entry3)).SingleOrDefault(),
@@ -175,8 +175,8 @@ namespace CharityManagmentSystem
         }
         public Category[] GetAllCategories()
         {
-            FetchTable("Category");
-            var res = from entry in dataSet.Tables["Category"].AsEnumerable()
+            FetchTable("Category_");
+            var res = from entry in dataSet.Tables["Category_"].AsEnumerable()
                       select QuerySelect<Category>(entry);
             return res.ToArray();
         }
@@ -207,16 +207,16 @@ namespace CharityManagmentSystem
         }
         public Item[] GetAllItems()
         {
-            ParallelFetch("Item", "MainCategory", "SubCategory", "Category");
+            ParallelFetch("Item", "MainCategory", "SubCategory", "Category_");
             var res = from entry in dataSet.Tables["Item"].AsEnumerable()
                       select QuerySelect<Item>(entry);
             return res.ToArray();
         }
         public MainCategory[] GetAllMainCategories()
         {
-            ParallelFetch("MainCategory", "Category");
+            ParallelFetch("MainCategory", "Category_");
             var res = from entry in dataSet.Tables["MainCategory"].AsEnumerable()
-                      join entry2 in dataSet.Tables["Category"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Category_"].AsEnumerable()
                       on entry.Field<string>("Name_") equals entry2.Field<string>("Name_")
                       select QuerySelect<MainCategory>(entry);
             return res.ToArray();
@@ -239,9 +239,9 @@ namespace CharityManagmentSystem
         }
         public SubCategory[] GetAllSubCategories()
         {
-            ParallelFetch("SubCategory", "Category");
+            ParallelFetch("SubCategory", "Category_");
             var res = from entry in dataSet.Tables["SubCategory"].AsEnumerable()
-                      join entry2 in dataSet.Tables["Category"].AsEnumerable()
+                      join entry2 in dataSet.Tables["Category_"].AsEnumerable()
                       on entry.Field<string>("Name_") equals entry2.Field<string>("Name_")
                       select QuerySelect<SubCategory>(entry2);
             return res.ToArray();
@@ -534,11 +534,12 @@ namespace CharityManagmentSystem
                       select QuerySelect<SubCategory>(entry, entry2);
             return res.ToArray();
         }
-        void PersonInserter(params Person[] people)
+        void PersonDerivatveInserter(params Person[] people)
         {
-            dataSet.Tables["Person"].Rows.Add(Insert(people));
             string tableName = people[0].GetType().Name;
             string SSNname = tableName + "_SSN";
+            ParallelFetch("Person", tableName);
+            dataSet.Tables["Person"].Rows.Add(Insert(people));
             foreach (var person in people)
             {
                 DataRow row = dataSet.Tables[tableName].NewRow();
@@ -548,42 +549,47 @@ namespace CharityManagmentSystem
         }
         public void InsertPersons(params Person[] people)
         {
+            FetchTable("Person");
             dataSet.Tables["Person"].Rows.Add(Insert(people));
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            InsertPersons(beneficiaries);
+            PersonDerivatveInserter(beneficiaries);
         }
         public void InsertDonors(params Donor[] donors)
         {
-            InsertPersons(donors);
+            PersonDerivatveInserter(donors);
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
-            InsertPersons(recepients);
+            PersonDerivatveInserter(recepients);
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
-            InsertPersons(volunteers);
+            PersonDerivatveInserter(volunteers);
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            InsertPersons(employees);
+            PersonDerivatveInserter(employees);
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
+            FetchTable("Campaign");
             dataSet.Tables["Campaign"].Rows.Add(Insert(campaigns));
         }
         public void InsertCategories(params Category[] categories)
         {
-            dataSet.Tables["Categories"].Rows.Add(Insert(categories));
+            FetchTable("Category_");
+            dataSet.Tables["Category_"].Rows.Add(Insert(categories));
         }
         public void InsertDepartments(params Department[] departments)
         {
+            FetchTable("Department");
             dataSet.Tables["Department"].Rows.Add(Insert(departments));
         }
         public void InsertItems(params Item[] items)
         {
+            FetchTable("Item");
             foreach(var item in items)
             {
                 DataRow row = dataSet.Tables["Item"].NewRow();

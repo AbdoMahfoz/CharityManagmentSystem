@@ -43,13 +43,13 @@ namespace CharityManagmentSystem
             {
                 string x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "MainName"));
-                ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category c 
+                ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category_ c 
                                                                     where mc.Name_ = c.Name_
                                                                     and mc.Name_ = :n", 
                                                                     new KeyValuePair<string, object>("n", reader[x]))[0];
                 x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "SubName"));
-                ((Item)(object)res).Sub = FillList<SubCategory>(@"select * from SubCategory mc, Category c 
+                ((Item)(object)res).Sub = FillList<SubCategory>(@"select * from SubCategory mc, Category_ c 
                                                                   where mc.Name_ = c.Name_
                                                                   and mc.Name_ = :n",
                                                                   new KeyValuePair<string, object>("n", reader[x]))[0];
