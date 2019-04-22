@@ -129,6 +129,34 @@ namespace CharityManagmentSystem
                 return res;
             }
         }
+        /// <summary>
+        /// Inserts the given entity into a table of it's class name.
+        /// It fills DataRows with any field in the given entity that matches a column name.
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="Entities">Entite(s) to be inserted</param>
+        DataRow[] Insert<T>(params T[] Entities)
+        {
+            Dictionary<string, System.Reflection.FieldInfo> Fields = new Dictionary<string, System.Reflection.FieldInfo>();
+            foreach (var field in typeof(T).GetFields())
+            {
+                Fields.Add(field.Name, field);
+            }
+            List<DataRow> res = new List<DataRow>();
+            foreach (var Entity in Entities)
+            {
+                DataRow row = dataSet.Tables[typeof(T).Name].NewRow();
+                foreach (DataColumn column in row.Table.Columns)
+                {
+                    if (Fields.TryGetValue(column.ColumnName.Replace("_", ""), out var value))
+                    {
+                        row[column.ColumnName] = value.GetValue(Entity);
+                    }
+                }
+                res.Add(row);
+            }
+            return res.ToArray();
+        }
         public Beneficiary[] GetAllBeneficiaries()
         {
             ParallelFetch("Beneficiary", "Person");
@@ -506,45 +534,65 @@ namespace CharityManagmentSystem
                       select QuerySelect<SubCategory>(entry, entry2);
             return res.ToArray();
         }
+        void PersonInserter(params Person[] people)
+        {
+            dataSet.Tables["Person"].Rows.Add(Insert(people));
+            string tableName = people[0].GetType().Name;
+            string SSNname = tableName + "_SSN";
+            foreach (var person in people)
+            {
+                DataRow row = dataSet.Tables[tableName].NewRow();
+                row[SSNname] = person.SSN;
+                dataSet.Tables[tableName].Rows.Add(row);
+            }
+        }
         public void InsertPersons(params Person[] people)
         {
-            throw new NotImplementedException();
+            dataSet.Tables["Person"].Rows.Add(Insert(people));
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            throw new NotImplementedException();
+            InsertPersons(beneficiaries);
         }
         public void InsertDonors(params Donor[] donors)
         {
-            throw new NotImplementedException();
+            InsertPersons(donors);
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
-            throw new NotImplementedException();
+            InsertPersons(recepients);
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
-            throw new NotImplementedException();
+            InsertPersons(volunteers);
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            throw new NotImplementedException();
+            InsertPersons(employees);
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
-            throw new NotImplementedException();
+            dataSet.Tables["Campaign"].Rows.Add(Insert(campaigns));
         }
         public void InsertCategories(params Category[] categories)
         {
-            throw new NotImplementedException();
+            dataSet.Tables["Categories"].Rows.Add(Insert(categories));
         }
         public void InsertDepartments(params Department[] departments)
         {
-            throw new NotImplementedException();
+            dataSet.Tables["Department"].Rows.Add(Insert(departments));
         }
         public void InsertItems(params Item[] items)
         {
-            throw new NotImplementedException();
+            foreach(var item in items)
+            {
+                DataRow row = dataSet.Tables["Item"].NewRow();
+                row["Name_"] = item.Name;
+                row["Description_"] = item.Description;
+                row["MainName"] = item.Main.Name;
+                row["SubName"] = item.Sub.Name;
+                dataSet.Tables["Item"].Rows.Add(row);
+            }
         }
         public void LinkItemWithDonor(DonorItem item)
         {
