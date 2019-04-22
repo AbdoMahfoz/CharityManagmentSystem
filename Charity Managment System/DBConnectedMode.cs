@@ -25,19 +25,34 @@ namespace CharityManagmentSystem
         private T FillObject<T>(OracleDataReader reader) where T : new()
         {
             string[] list = new string[reader.FieldCount];
-            for(int i = 0; i < reader.FieldCount; i++)
+            for (int i = 0; i < reader.FieldCount; i++)
             {
                 list[i] = reader.GetName(i);
             }
             T res = new T();
-            foreach(var Property in typeof(T).GetFields())
+            foreach (var Property in typeof(T).GetFields())
             {
                 string x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
-                if(!string.IsNullOrEmpty(x))
+                if (!string.IsNullOrEmpty(x))
                 {
                     Property.SetValue(res, reader[x]);
                 }
+            }
+            if(typeof(T) == typeof(Item))
+            {
+                string x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "MainName"));
+                ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category c 
+                                                                    where mc.Name_ = c.Name_
+                                                                    and mc.Name_ = :n", 
+                                                                    new KeyValuePair<string, object>("n", reader[x]))[0];
+                x = Array.Find(list, new Predicate<string>(
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "SubName"));
+                ((Item)(object)res).Sub = FillList<SubCategory>(@"select * from SubCategory mc, Category c 
+                                                                  where mc.Name_ = c.Name_
+                                                                  and mc.Name_ = :n",
+                                                                  new KeyValuePair<string, object>("n", reader[x]))[0];
             }
             return res;
         }
