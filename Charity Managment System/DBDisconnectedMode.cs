@@ -602,15 +602,41 @@ namespace CharityManagmentSystem
         }
         public void LinkItemWithDonor(DonorItem item)
         {
-            throw new NotImplementedException();
+            FetchTable("Donate_to");
+            DataRow row = dataSet.Tables["Donate_to"].NewRow();
+            row["ItemName"] = item.Item.Name;
+            row["ItemMainName"] = item.Item.Main.Name;
+            row["ItemSubName"] = item.Item.Sub.Name;
+            row["Donor_SSN"] = item.Donor.SSN;
+            row["Campaign_ID"] = item.Campaign.ID;
+            row["Count_"] = item.Count;
+            dataSet.Tables["Donate_to"].Rows.Add(row);
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
-            throw new NotImplementedException();
+            FetchTable("Receieves_From");
+            DataRow row = dataSet.Tables["Receieves_From"].NewRow();
+            row["ItemName"] = item.Item.Name;
+            row["ItemMainName"] = item.Item.Main.Name;
+            row["ItemSubName"] = item.Item.Sub.Name;
+            row["Recepient_SSN"] = item.Recipient.SSN;
+            row["Campaign_ID"] = item.Campaign.ID;
+            row["Count_"] = item.Count;
+            dataSet.Tables["Receieves_From"].Rows.Add(row);
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
-            throw new NotImplementedException();
+            DataRow row = (from entry in dataSet.Tables["Campaign"].AsEnumerable()
+                           where entry.Field<int>("ID_") == campaign.ID
+                           select entry).Single();
+            row["Employe_SSN"] = employee.SSN;
+            //------> Remove this before deployment for performance
+            if(!(from entry in dataSet.Tables["Campaign"].AsEnumerable()
+                 where entry.Field<int>("Employee_SSN") == employee.SSN
+                 select entry.Field<int>("Campaign_ID")).Contains(campaign.ID))
+            {
+                throw new Exception("Update faliure");
+            }
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
