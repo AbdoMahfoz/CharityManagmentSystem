@@ -181,7 +181,7 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
-            return FillList<Item>("select * from Receives_From RF where RF.Campaign_ID = :IDT",
+            return FillList<Item>("select * from Donate_to RF where RF.Campaign_ID = :IDT",
                             new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
@@ -191,13 +191,13 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory)
         {
-            return FillList<Item>("select ItemName from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN",
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN",
                             new KeyValuePair<string, object>("IMN", mainCategory.Name),
                             new KeyValuePair<string, object>("ISN", subCategory.Name));
         }
         public Item[] GetItemsReceivedBy(Recepient recepient)
         {
-            return FillList<Item>("select ItemName from Receives_From RF where RF.Recipient_SSN = :RSSN",
+            return FillList<Item>("select * from Receives_From RF where RF.Recipient_SSN = :RSSN",
                             new KeyValuePair<string, object>("RSSN", recepient.SSN));
         }
         public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
