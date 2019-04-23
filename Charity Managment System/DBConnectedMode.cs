@@ -240,7 +240,6 @@ namespace CharityManagmentSystem
             reader.Close();
             return list.ToArray();
         }
-        //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
         {
             return FillList<Recepient>(@"select * from recepient r , Receives_From rf, Person p
@@ -299,7 +298,6 @@ namespace CharityManagmentSystem
             return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name",
                                          new KeyValuePair<string, object>("name", mainCategory.Name));
         }
-        //
         public void InsertPersons(params Person[] people)
         {
             for (int i = 0; i < people.Length; i++)
@@ -313,12 +311,13 @@ namespace CharityManagmentSystem
                 cmd.Parameters.Add("Name", people[i].Name);
                 cmd.Parameters.Add("Mail", people[i].Mail);
                 cmd.ExecuteNonQuery();
-                //insert the person locations
                 for (int j = 0; j < people[i].Location.Length; j++)
                 {
-                    OracleCommand cmd1 = new OracleCommand();
-                    cmd1.Connection = conn;
-                    cmd1.CommandText = "insert into Person_Location values (:SSN,:Location)";
+                    OracleCommand cmd1 = new OracleCommand
+                    {
+                        Connection = conn,
+                        CommandText = "insert into Person_Location values (:SSN,:Location)"
+                    };
                     cmd1.Parameters.Add("SSN", people[i].SSN);
                     cmd1.Parameters.Add("Location", people[i].Location[j]);
                     cmd1.ExecuteNonQuery();
@@ -468,7 +467,7 @@ namespace CharityManagmentSystem
                 $" Values({item.Donor.SSN},{item.Campaign.ID},{item.Item.Main.Name},{item.Item.Name},{item.Item.Sub.Name})",
                 CommandType = CommandType.Text
             };
-             cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
@@ -507,10 +506,8 @@ namespace CharityManagmentSystem
                 $" ItemSubName={item.Item.Sub.Name},Donor_SSN={item.Donor.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
             };
-            cmd.ExecuteNonQuery();
-           
+            cmd.ExecuteNonQuery();  
         }
-        
         public void UpdateLink(RecepientItem item)
         {
             OracleCommand cmd = new OracleCommand
@@ -521,7 +518,6 @@ namespace CharityManagmentSystem
                 $"ItemSubName={item.Item.Sub.Name},Recipient_SSN={item.Recipient.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
             };
-           
             cmd.ExecuteNonQuery();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
@@ -565,7 +561,6 @@ namespace CharityManagmentSystem
                 CommandText = $"Insert into MainCategory(Name_) Values ({category.Name}) ",
                 CommandType = CommandType.Text
             };
-            
             cmd.ExecuteNonQuery();
         }
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
@@ -576,7 +571,6 @@ namespace CharityManagmentSystem
                 CommandText = $"Insert into SubCategory (Name_,Main_Name) Values ({category.Name},{mainCategory.Name})",
                 CommandType = CommandType.Text
             };
-            
             cmd.ExecuteNonQuery();
         }
         public void DeleteEntity<T>(T Entity)
