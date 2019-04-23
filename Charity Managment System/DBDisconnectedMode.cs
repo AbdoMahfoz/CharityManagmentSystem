@@ -723,7 +723,7 @@ namespace CharityManagmentSystem
         {
             throw new NotImplementedException();
         }
-        public void UpdateLink(DonorItem donorItem, int Count)
+        public void UpdateLink(DonorItem donorItem)
         {
             FetchTable("Donate_to");
             var row = (from entry in dataSet.Tables["Donate_to"].AsEnumerable()
@@ -736,7 +736,7 @@ namespace CharityManagmentSystem
             row["Count_"] = donorItem.Count;
             dataSet.Tables["Donate_to"].AcceptChanges();
         }
-        public void UpdateLink(RecepientItem recepientItem, int Count)
+        public void UpdateLink(RecepientItem recepientItem)
         {
             FetchTable("Receives_From");
             var row = (from entry in dataSet.Tables["Receives_From"].AsEnumerable()
