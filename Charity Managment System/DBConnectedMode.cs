@@ -165,20 +165,9 @@ namespace CharityManagmentSystem
         }
         public Employee GetEmployeeManaging(Campaign campaign)
         {
-            OracleCommand cmd = new OracleCommand
-            {
-                Connection = conn,
-                CommandText = "select Employee_SSN from Campaign C where C.ID_ = :IDT",
-                CommandType = CommandType.Text
-            };
-            cmd.Parameters.Add("IDT", campaign.ID);
-            OracleDataReader reader = cmd.ExecuteReader();
-            Employee employee = new Employee();
-            if (reader.Read())
-            {
-                employee.SSN = int.Parse(reader[0].ToString());
-            }
-            return employee;
+            return FillList<Employee>(@"select * from Campaign C, Employee E, Person P 
+                                where C.ID_ = :IDT and C.Employee_SSN = E.Employee_SSN and E.Employee_SSN = P.SSN",
+                                new KeyValuePair<string, object>("IDT", campaign.ID))[0];
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
