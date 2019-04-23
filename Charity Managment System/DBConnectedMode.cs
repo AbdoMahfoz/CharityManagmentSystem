@@ -148,7 +148,6 @@ namespace CharityManagmentSystem
             cmd.Parameters.Add("IMN", item.Main);
             cmd.Parameters.Add("ISN", item.Sub);
             OracleDataReader reader = cmd.ExecuteReader();
-            Employee employee = new Employee();
             List<DonorItem> list = new List<DonorItem>();
             while (reader.Read())
             {
@@ -177,22 +176,22 @@ namespace CharityManagmentSystem
         }
         public Item[] GetItemsDonatedBy(Donor donor)
         {
-            return FillList<Item>("select ItemName from Donate_to DT where DT.Donor_SSN = :DN",
+            return FillList<Item>("select * from Donate_to DT where DT.Donor_SSN = :DN",
                             new KeyValuePair<string, object>("DN", donor.SSN));
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
-            return FillList<Item>("select ItemName from Receives_From RF where RF.Campaign_ID = :IDT",
+            return FillList<Item>("select * from Receives_From RF where RF.Campaign_ID = :IDT",
                             new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
         {
-            return FillList<Item>("select ItemName from Receives_From RF where RF.ItemMainName = :IMN",
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN",
                             new KeyValuePair<string, object>("IMN", mainCategory.Name));
         }
         public Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory)
         {
-            return FillList<Item>("select ItemName from Receives_From RF where RF.ItemMainName = :IMN and RF.ItemSubName = :ISN",
+            return FillList<Item>("select ItemName from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN",
                             new KeyValuePair<string, object>("IMN", mainCategory.Name),
                             new KeyValuePair<string, object>("ISN", subCategory.Name));
         }
@@ -203,9 +202,32 @@ namespace CharityManagmentSystem
         }
         public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
         {
-            return FillList<RecepientItem>("select Recipient_SSN from Receives_From RF where RF.Campaign_ID = :IDT and RF.ItemName = :IN",
-                           new KeyValuePair<string, object>("IDT", campaign.ID),
-                           new KeyValuePair<string, object>("IN", item.Name));
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = @"select * from Receives_From RF , Recipient R, Person P
+                              where RF.Campaign_ID = :IDT and RF.Donor_SSN = R.Donor_SSN and R.Donor_SSN = P.SSN and
+                              DT.ItemName = :IName and DT.ItemMainName = :IMN and DT.ItemSubName = :ISN ",
+                CommandType = CommandType.Text
+            };
+            cmd.Parameters.Add("IDT", campaign.ID);
+            cmd.Parameters.Add("IName", item.Name);
+            cmd.Parameters.Add("IMN", item.Main);
+            cmd.Parameters.Add("ISN", item.Sub);
+            OracleDataReader reader = cmd.ExecuteReader();
+            List<RecepientItem> list = new List<RecepientItem>();
+            while (reader.Read())
+            {
+                list.Add(new RecepientItem()
+                {
+                    Recipient = FillObject<Recepient>(reader),
+                    Campaign = campaign,
+                    Item = item,
+                    Count = (int)reader["Count_"]
+                });
+            }
+            reader.Close();
+            return list.ToArray();
         }
         //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
