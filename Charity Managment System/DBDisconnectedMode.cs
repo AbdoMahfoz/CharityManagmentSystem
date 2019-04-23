@@ -57,6 +57,7 @@ namespace CharityManagmentSystem
                 lock(dataSet)
                 {
                     dataSet.Merge(tmp);
+                    dataSet.AcceptChanges();
                 }
                 lock(adapters)
                 {
@@ -130,12 +131,12 @@ namespace CharityManagmentSystem
             }
         }
         /// <summary>
-        /// Inserts the given entity into a table of it's class name.
-        /// It fills DataRows with any field in the given entity that matches a column name.
+        /// Gets the DataRows that represent the given entites.
+        /// It fills DataRows with any field in the given entity that matches a column name in the DataRow.
         /// </summary>
         /// <typeparam name="T">The entity type</typeparam>
         /// <param name="Entities">Entite(s) to be inserted</param>
-        DataRow[] Insert<T>(params T[] Entities)
+        DataRow[] ToDataRow<T>(params T[] Entities)
         {
             Dictionary<string, System.Reflection.FieldInfo> Fields = new Dictionary<string, System.Reflection.FieldInfo>();
             foreach (var field in typeof(T).GetFields())
@@ -539,18 +540,21 @@ namespace CharityManagmentSystem
             string tableName = people[0].GetType().Name;
             string SSNname = tableName + "_SSN";
             ParallelFetch("Person", tableName);
-            dataSet.Tables["Person"].Rows.Add(Insert(people));
+            dataSet.Tables["Person"].Rows.Add(ToDataRow(people));
             foreach (var person in people)
             {
                 DataRow row = dataSet.Tables[tableName].NewRow();
                 row[SSNname] = person.SSN;
                 dataSet.Tables[tableName].Rows.Add(row);
             }
+            dataSet.Tables["Person"].AcceptChanges();
+            dataSet.Tables[tableName].AcceptChanges();
         }
         public void InsertPersons(params Person[] people)
         {
             FetchTable("Person");
-            dataSet.Tables["Person"].Rows.Add(Insert(people));
+            dataSet.Tables["Person"].Rows.Add(ToDataRow(people));
+            dataSet.Tables["Person"].AcceptChanges();
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
@@ -570,22 +574,44 @@ namespace CharityManagmentSystem
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            PersonDerivatveInserter(employees);
+            ParallelFetch("Person", "Employee");
+            dataSet.Tables["Person"].Rows.Add(ToDataRow(employees));
+            foreach(var employee in employees)
+            {
+                DataRow row = dataSet.Tables["Employee"].NewRow();
+                row["Employee_SSN"] = employee.SSN;
+                row["Salary"] = employee.Salary;
+                dataSet.Tables["Employee"].Rows.Add(row);
+            }
+            dataSet.Tables["Person"].AcceptChanges();
+            dataSet.Tables["Employee"].AcceptChanges();
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
             FetchTable("Campaign");
-            dataSet.Tables["Campaign"].Rows.Add(Insert(campaigns));
+            foreach(var row in ToDataRow(campaigns))
+            {
+                dataSet.Tables["Campaign"].Rows.Add(row);
+            }
+            dataSet.Tables["Campaign"].AcceptChanges();
         }
         public void InsertCategories(params Category[] categories)
         {
             FetchTable("Category_");
-            dataSet.Tables["Category_"].Rows.Add(Insert(categories));
+            foreach(var row in ToDataRow(categories))
+            {
+                dataSet.Tables["Category_"].Rows.Add(row);
+            }
+            dataSet.Tables["Category_"].AcceptChanges();
         }
         public void InsertDepartments(params Department[] departments)
         {
             FetchTable("Department");
-            dataSet.Tables["Department"].Rows.Add(Insert(departments));
+            foreach(var row in ToDataRow(departments))
+            {
+                dataSet.Tables["Department"].Rows.Add(row);
+            }
+            dataSet.Tables["Department"].AcceptChanges();
         }
         public void InsertItems(params Item[] items)
         {
@@ -599,6 +625,7 @@ namespace CharityManagmentSystem
                 row["SubName"] = item.Sub.Name;
                 dataSet.Tables["Item"].Rows.Add(row);
             }
+            dataSet.Tables["Item"].AcceptChanges();
         }
         public void LinkItemWithDonor(DonorItem item)
         {
@@ -611,6 +638,7 @@ namespace CharityManagmentSystem
             row["Campaign_ID"] = item.Campaign.ID;
             row["Count_"] = item.Count;
             dataSet.Tables["Donate_to"].Rows.Add(row);
+            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
@@ -623,32 +651,43 @@ namespace CharityManagmentSystem
             row["Campaign_ID"] = item.Campaign.ID;
             row["Count_"] = item.Count;
             dataSet.Tables["Receieves_From"].Rows.Add(row);
+            dataSet.Tables["Receieves_From"].AcceptChanges();
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
+            FetchTable("Campaign");
             DataRow row = (from entry in dataSet.Tables["Campaign"].AsEnumerable()
                            where entry.Field<int>("ID_") == campaign.ID
                            select entry).Single();
             row["Employe_SSN"] = employee.SSN;
-            //------> Remove this before deployment for performance
-            if(!(from entry in dataSet.Tables["Campaign"].AsEnumerable()
-                 where entry.Field<int>("Employee_SSN") == employee.SSN
-                 select entry.Field<int>("Campaign_ID")).Contains(campaign.ID))
-            {
-                throw new Exception("Update faliure");
-            }
+            dataSet.Tables["Campaign"].AcceptChanges();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            throw new NotImplementedException();
+            FetchTable("Volunteer_in");
+            DataRow row = dataSet.Tables["Volunteer_in"].NewRow();
+            row["Volunteer_SSN"] = volunteer.SSN;
+            row["Campaign_ID"] = campaign.ID;
+            dataSet.Tables["Volunteer_in"].Rows.Add(row);
+            dataSet.Tables["Volunteer_in"].AcceptChanges();
         }
         public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            throw new NotImplementedException();
+            FetchTable("Benefit_from");
+            DataRow row = dataSet.Tables["Benefit_from"].NewRow();
+            row["Beneficiary_SSN"] = beneficiary.SSN;
+            row["Campaign_ID"] = campaign.ID;
+            dataSet.Tables["Benefit_from"].Rows.Add(row);
+            dataSet.Tables["Benefit_from"].AcceptChanges();
         }
         public void SetEmployeeDepartment(Employee employee, Department department)
         {
-            throw new NotImplementedException();
+            FetchTable("Employee");
+            var row = (from entry in dataSet.Tables["Employee"].AsEnumerable()
+                       where entry.Field<int>("Employee_SSN") == employee.SSN
+                       select entry).Single();
+            row["Department_Name"] = department.DeptName;
+            dataSet.Tables["Employee"].AcceptChanges();
         }
         public void SetCategoryAsMain(Category category)
         {
