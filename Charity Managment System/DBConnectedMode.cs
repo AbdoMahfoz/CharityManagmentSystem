@@ -177,61 +177,61 @@ namespace CharityManagmentSystem
         //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
         {
-            return FillList<Recepient>(@"select recipient_ssn from recepient r , Receives_From rf
-                                         where r.recipient_ssn = rf.Recipient_SSN and rf.Campaign_ID =:campaign",
+            return FillList<Recepient>(@"select * from recepient r , Receives_From rf, Person p
+                                         where p.SSN = r.recepient_ssn and r.recipient_ssn = rf.Recipient_SSN and rf.Campaign_ID =:campaign",
                                          new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Volunteer[] GetVolunteersOf(Campaign campaign)
         {
-            return FillList<Volunteer>(@"select volunteer_ssn from volunteer v , volunteer_in Vin
-                                         where v.volunteer_ssn = Vin.volunteer_SSN and Vin.Campaign_ID =:campaign",
+            return FillList<Volunteer>(@"select * from volunteer v , volunteer_in Vin, Person p
+                                         where p.SSN = v.volunteer_ssn and v.volunteer_ssn = Vin.volunteer_SSN and Vin.Campaign_ID =:campaign",
                                         new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Department[] GetDepartmentOf(Employee employee)
         {
-            return FillList<Department>(@"select department_name from employee emp , department dept 
+            return FillList<Department>(@"select * from employee emp , department dept 
                                         where emp.deptartment_name=dept.dept_name and emp.employee_ssn=:emp_ssn",
                                          new KeyValuePair<string, object>("emp_ssn",employee.SSN));
         }
         public Campaign[] GetCampaginsManagedBy(Employee employee)
         {
-            return FillList<Campaign>(@"select ID_ from campaign c where c.employee_ssn=:emp_ssn",
+            return FillList<Campaign>(@"select * from campaign c where c.employee_ssn=:emp_ssn",
                                        new KeyValuePair<string, object>("emp_ssn",employee.SSN));
         }
         public Campaign[] GetCampaignsOf(Volunteer volunteer)
         {
-            return FillList<Campaign>(@"select ID_ from campaign c ,volunteer_in Vin where c.id_=Vin.Campaign_ID 
+            return FillList<Campaign>(@"select * from campaign c ,volunteer_in Vin where c.id_=Vin.Campaign_ID 
                                       and Vin.volunteer_ssn=:volunteerSSN ",
-                                       new KeyValuePair<string, object>("volunteerSSN",volunteer.SSN));
+                                      new KeyValuePair<string, object>("volunteerSSN",volunteer.SSN));
         }
         public Campaign[] GetCampaignsOf(Donor donor)
         {
-            return FillList<Campaign>(@"select ID_ from campaign c , donate_to D where c.id_=v.Campaign_ID 
+            return FillList<Campaign>(@"select * from campaign c , donate_to D where c.id_=v.Campaign_ID 
                                       and d.donor_ssn=:donorSSN ",
-                                        new KeyValuePair<string, object>("donorSSN", donor.SSN));
+                                      new KeyValuePair<string, object>("donorSSN", donor.SSN));
         }
         public Campaign[] GetCampaignsOf(Recepient recepient)
         {
-            return FillList<Campaign>(@"select ID_ from campaign c , Receives_From rf where c.id_=rf.Campaign_ID 
+            return FillList<Campaign>(@"select * from campaign c , Receives_From rf where c.id_=rf.Campaign_ID 
                                       and rf.Recipient_SSN=:recipientSSN ",
-                                        new KeyValuePair<string, object>("recipientSSN", recepient.SSN));
+                                      new KeyValuePair<string, object>("recipientSSN", recepient.SSN));
         }
-        
         public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
         {
-            return FillList<Campaign>(@"select ID_ from campaign c , Benefit_from bf where c.id_=bf.Campaign_ID 
+            return FillList<Campaign>(@"select * from campaign c , Benefit_from bf where c.id_=bf.Campaign_ID 
                                       and bf.Beneficiary_SSN=:BeneficiarySSN ",
-                                        new KeyValuePair<string, object>("BeneficiarySSN", beneficiary.SSN));
+                                      new KeyValuePair<string, object>("BeneficiarySSN", beneficiary.SSN));
         }
         public DonorItem[] GetDonorsOf(Item item)
         {
-            return FillList<DonorItem>(@"select Donor_ssn from donor d , donate_to dt where d.donor_ssn=dt.donor_ssn and 
+            return FillList<DonorItem>(@"select * from donor d , donate_to dt where d.donor_ssn=dt.donor_ssn and 
                                        dt.itemname=:item",
                                        new KeyValuePair<string, object>("item",item.Name));
         }
         public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
         {
-            return FillList<SubCategory>(@"");
+            return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name",
+                                         new KeyValuePair<string, object>("name", mainCategory.Name));
         }
         //
         public void InsertPersons(params Person[] people)
@@ -315,44 +315,39 @@ namespace CharityManagmentSystem
         }
         public void UpdateLink(DonorItem item)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
                 CommandText = $"update Donate_to set Count_={item.Count}" +
-                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, ItemSubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
         }
         public void UpdateLink(RecepientItem item)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
                 CommandText =$"update Donate_to set Count_={item.Count}" +
-                $"where ItemName={item.Item.Name},MainName={item.Item.Main.Name},SubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, ItemSubName={item.Item.Sub.Name}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
                 CommandText = $"insert into  Volunteer_in (Volunteer_SSN,Campaign_ID)" +
                 $" Values({volunteer.SSN},{campaign.ID})",
                 CommandType = CommandType.Text
-            };
-            
+            };   
             cmd.ExecuteNonQuery();
         }
         public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
@@ -360,12 +355,10 @@ namespace CharityManagmentSystem
                 $" Values({beneficiary.SSN},{campaign.ID})",
                 CommandType = CommandType.Text
             };
-
             cmd.ExecuteNonQuery();
         }
         public void SetEmployeeDepartment(Employee employee, Department department)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
@@ -377,10 +370,8 @@ namespace CharityManagmentSystem
         }
         public void SetCategoryAsMain(Category category)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
-            {
-                
+            {       
                 Connection = conn,
                 CommandText = $"update MainCategory set Name_={category.Name}" +
                 $"where ={}",
@@ -390,10 +381,8 @@ namespace CharityManagmentSystem
         }
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
-            InitializeConnection();
             OracleCommand cmd = new OracleCommand
-            {
-                
+            {       
                 Connection = conn,
                 CommandText = $"update SubCategory set Name_={category.Name},Main_Name={mainCategory.Name}" +
                 $"where ={}",
