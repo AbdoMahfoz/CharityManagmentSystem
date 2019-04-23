@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Oracle.DataAccess.Client;
-using Oracle.DataAccess.Types;
 using CharityManagmentSystem.Models;
 using System.Data;
 using System.Threading;
@@ -143,10 +140,15 @@ namespace CharityManagmentSystem
             {
                 Fields.Add(field.Name, field);
             }
+            string tableName = typeof(T).Name;
+            if(tableName == "Category")
+            {
+                tableName += "_";
+            }
             List<DataRow> res = new List<DataRow>();
             foreach (var Entity in Entities)
             {
-                DataRow row = dataSet.Tables[typeof(T).Name].NewRow();
+                DataRow row = dataSet.Tables[tableName].NewRow();
                 foreach (DataColumn column in row.Table.Columns)
                 {
                     if (Fields.TryGetValue(column.ColumnName.Replace("_", ""), out var value))
@@ -157,6 +159,45 @@ namespace CharityManagmentSystem
                 res.Add(row);
             }
             return res.ToArray();
+        }
+        /// <summary>
+        /// Gets the DataRow that represent the given entity.
+        /// It fills the DataRow with any field in the given entity that matches a column name in the DataRow.
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="Entities">Entite(s) to be inserted</param>
+        DataRow ToDataRow<T>(T Entity)
+        {
+            return ToDataRow(new T[] { Entity })[0];
+        }
+        /// <summary>
+        /// Inserts the derivatives of person properly in the dataSet
+        /// </summary>
+        /// <param name="people">The derivatives to be inserted</param>
+        void PersonDerivativeInserter(params Person[] people)
+        {
+            string tableName = people[0].GetType().Name;
+            string SSNname = tableName + "_SSN";
+            ParallelFetch("Person", tableName);
+            dataSet.Tables["Person"].Rows.Add(ToDataRow(people));
+            foreach (var person in people)
+            {
+                DataRow row = dataSet.Tables[tableName].NewRow();
+                row[SSNname] = person.SSN;
+                if (person is Employee e)
+                {
+                    row["Salary"] = e.Salary;
+                }
+                if(person.GetType() == typeof(Person))
+                {
+                    throw new Exception("PersonDerivativeInserter should receive an object of Person." +
+                                        "\nThis function only serves derivatives of person." +
+                                        "\nIf you want to insert a person, try using ToDataRow");
+                }
+                dataSet.Tables[tableName].Rows.Add(row);
+            }
+            dataSet.Tables["Person"].AcceptChanges();
+            dataSet.Tables[tableName].AcceptChanges();
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
@@ -535,21 +576,6 @@ namespace CharityManagmentSystem
                       select QuerySelect<SubCategory>(entry, entry2);
             return res.ToArray();
         }
-        void PersonDerivatveInserter(params Person[] people)
-        {
-            string tableName = people[0].GetType().Name;
-            string SSNname = tableName + "_SSN";
-            ParallelFetch("Person", tableName);
-            dataSet.Tables["Person"].Rows.Add(ToDataRow(people));
-            foreach (var person in people)
-            {
-                DataRow row = dataSet.Tables[tableName].NewRow();
-                row[SSNname] = person.SSN;
-                dataSet.Tables[tableName].Rows.Add(row);
-            }
-            dataSet.Tables["Person"].AcceptChanges();
-            dataSet.Tables[tableName].AcceptChanges();
-        }
         public void InsertPersons(params Person[] people)
         {
             FetchTable("Person");
@@ -558,33 +584,23 @@ namespace CharityManagmentSystem
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
-            PersonDerivatveInserter(beneficiaries);
+            PersonDerivativeInserter(beneficiaries);
         }
         public void InsertDonors(params Donor[] donors)
         {
-            PersonDerivatveInserter(donors);
+            PersonDerivativeInserter(donors);
         }
         public void InsertReceipeients(params Recepient[] recepients)
         {
-            PersonDerivatveInserter(recepients);
+            PersonDerivativeInserter(recepients);
         }
         public void InsertVolunteers(params Volunteer[] volunteers)
         {
-            PersonDerivatveInserter(volunteers);
+            PersonDerivativeInserter(volunteers);
         }
         public void InsertEmployee(params Employee[] employees)
         {
-            ParallelFetch("Person", "Employee");
-            dataSet.Tables["Person"].Rows.Add(ToDataRow(employees));
-            foreach(var employee in employees)
-            {
-                DataRow row = dataSet.Tables["Employee"].NewRow();
-                row["Employee_SSN"] = employee.SSN;
-                row["Salary"] = employee.Salary;
-                dataSet.Tables["Employee"].Rows.Add(row);
-            }
-            dataSet.Tables["Person"].AcceptChanges();
-            dataSet.Tables["Employee"].AcceptChanges();
+            PersonDerivativeInserter(employees);
         }
         public void InsertCampaign(params Campaign[] campaigns)
         {
@@ -691,11 +707,17 @@ namespace CharityManagmentSystem
         }
         public void SetCategoryAsMain(Category category)
         {
-            throw new NotImplementedException();
+            FetchTable("MainCategory");
+            dataSet.Tables["MainCategory"].Rows.Add(ToDataRow(category));
+            dataSet.Tables["MainCategory"].AcceptChanges();
         }
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
-            throw new NotImplementedException();
+            ParallelFetch("SubCategory", "Category_");
+            DataRow row = ToDataRow(category);
+            row["Main_Name"] = mainCategory.Name;
+            dataSet.Tables["SubCategory"].Rows.Add(row);
+            dataSet.Tables["SubCategory"].AcceptChanges();
         }
         public void UpdateEntity<T>(T Entity)
         {
@@ -703,11 +725,29 @@ namespace CharityManagmentSystem
         }
         public void UpdateLink(DonorItem donorItem)
         {
-            throw new NotImplementedException();
+            FetchTable("Donate_to");
+            var row = (from entry in dataSet.Tables["Donate_to"].AsEnumerable()
+                       where entry.Field<int>("Campaign_ID") == donorItem.Campaign.ID &&
+                             entry.Field<int>("Donor_SSN") == donorItem.Donor.SSN &&
+                             entry.Field<string>("ItemName") == donorItem.Item.Name &&
+                             entry.Field<string>("ItemMainName") == donorItem.Item.Main.Name &&
+                             entry.Field<string>("ItemSubName") == donorItem.Item.Sub.Name
+                       select entry).Single();
+            row["Count_"] = donorItem.Count;
+            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void UpdateLink(RecepientItem recepientItem)
         {
-            throw new NotImplementedException();
+            FetchTable("Receives_From");
+            var row = (from entry in dataSet.Tables["Receives_From"].AsEnumerable()
+                       where entry.Field<int>("Campaign_ID") == recepientItem.Campaign.ID &&
+                             entry.Field<int>("Recepient_SSN") == recepientItem.Recipient.SSN &&
+                             entry.Field<string>("ItemName") == recepientItem.Item.Name &&
+                             entry.Field<string>("ItemMainName") == recepientItem.Item.Main.Name &&
+                             entry.Field<string>("ItemSubName") == recepientItem.Item.Sub.Name
+                       select entry).Single();
+            row["Count_"] = recepientItem.Count;
+            dataSet.Tables["Receives_From"].AcceptChanges();
         }
         public void DeleteEntity<T>(T Entity)
         {

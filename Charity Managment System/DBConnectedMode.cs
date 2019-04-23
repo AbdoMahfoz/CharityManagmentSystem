@@ -81,27 +81,22 @@ namespace CharityManagmentSystem
         public Beneficiary[] GetAllBeneficiaries()
         {
             return FillList<Beneficiary>("select * from Beneficiary b, Person p where b.SSN = p.SSN");
-
         }
         public Campaign[] GetAllCampaigns()
         {
             return FillList<Campaign>("select * from Campaign");
-
         }
         public Category[] GetAllCategories()
         {
             return FillList<Category>("select * from Category");
-
         }
         public Department[] GetAllDepartments()
         {
             return FillList<Department>("select * from Department");
-
         }
         public Donor[] GetAllDonors()
         {
             return FillList<Donor>("select * from Donor d, Person p where d.SSN = p.SSN");
-
         }
         public Employee[] GetAllEmployees()
         {
