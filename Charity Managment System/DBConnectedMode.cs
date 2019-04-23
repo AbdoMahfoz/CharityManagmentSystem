@@ -171,7 +171,8 @@ namespace CharityManagmentSystem
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
-            return FillList<Employee>("select Employee_SSN from Employee E where E.Department_Name = :DN",
+            return FillList<Employee>(@"select * from Employee E , Person P 
+                                        where E.Department_Name = :DN and E.Employee_SSN = P.SSN",
                             new KeyValuePair<string, object>("DN", department.DeptName));
         }
         public Item[] GetItemsDonatedBy(Donor donor)
