@@ -755,27 +755,67 @@ namespace CharityManagmentSystem
         }
         public void DeleteLink(DonorItem item)
         {
-            throw new NotImplementedException();
+            FetchTable("Donate_to");
+            var row = (from entry in dataSet.Tables["Donate_to"].AsEnumerable()
+                       where entry.Field<int>("Campaign_ID") == item.Campaign.ID &&
+                             entry.Field<int>("Donor_SSN") == item.Donor.SSN &&
+                             entry.Field<string>("ItemName") == item.Item.Name &&
+                             entry.Field<string>("ItemMainName") == item.Item.Main.Name &&
+                             entry.Field<string>("ItemSubName") == item.Item.Sub.Name
+                       select entry).Single();
+            dataSet.Tables["Donate_to"].Rows.Remove(row);
+            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void DeleteLink(RecepientItem item)
         {
-            throw new NotImplementedException();
+            FetchTable("Receives_From");
+            var row = (from entry in dataSet.Tables["Receives_From"].AsEnumerable()
+                       where entry.Field<int>("Campaign_ID") == item.Campaign.ID &&
+                             entry.Field<int>("Recepient_SSN") == item.Recipient.SSN &&
+                             entry.Field<string>("ItemName") == item.Item.Name &&
+                             entry.Field<string>("ItemMainName") == item.Item.Main.Name &&
+                             entry.Field<string>("ItemSubName") == item.Item.Sub.Name
+                       select entry).Single();
+            dataSet.Tables["Receives_From"].Rows.Remove(row);
+            dataSet.Tables["Receives_From"].AcceptChanges();
         }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
-            throw new NotImplementedException();
+            FetchTable("Volunteer_in");
+            var row = (from entry in dataSet.Tables["Volunteer_in"].AsEnumerable()
+                       where entry.Field<int>("Volunteer_SSN") == volunteer.SSN &&
+                             entry.Field<int>("Campaign_ID") == campaign.ID
+                       select entry).Single();
+            dataSet.Tables["Volunteer_in"].Rows.Remove(row);
+            dataSet.Tables["Volunteer_in"].AcceptChanges();
         }
         public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
-            throw new NotImplementedException();
+            FetchTable("Benefit_from");
+            var row = (from entry in dataSet.Tables["Benefit_from"].AsEnumerable()
+                       where entry.Field<int>("Beneficiary_SSN") == beneficiary.SSN &&
+                             entry.Field<int>("Campaign_ID") == campaign.ID
+                       select entry).Single();
+            dataSet.Tables["Benefit_from"].Rows.Remove(row);
+            dataSet.Tables["Benefit_from"].AcceptChanges();
         }
         public void UnSetCategoryAsMain(MainCategory category)
         {
-            throw new NotImplementedException();
+            FetchTable("MainCategory");
+            var row = (from entry in dataSet.Tables["MainCategoyr"].AsEnumerable()
+                       where entry.Field<string>("Name_") == category.Name
+                       select entry).Single();
+            dataSet.Tables["MainCategory"].Rows.Remove(row);
+            dataSet.Tables["MainCategory"].AcceptChanges();
         }
         public void UnSetCategoryAsSub(SubCategory category)
         {
-            throw new NotImplementedException();
+            FetchTable("SubCategory");
+            var row = (from entry in dataSet.Tables["SubCategory"].AsEnumerable()
+                       where entry.Field<string>("Name_") == category.Name
+                       select entry).Single();
+            dataSet.Tables["SubCategory"].Rows.Remove(row);
+            dataSet.Tables["SubCategory"].AcceptChanges();
         }
     }
 }
