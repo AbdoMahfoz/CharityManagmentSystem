@@ -134,53 +134,111 @@ namespace CharityManagmentSystem
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
-            return FillList<Department>(@"select dept_name,description from departmrnt dep , Employee emp where emp.Department_Name = dep.Dept_Name
+            return FillList<Department>(@"select dept_name,description from department dep , Employee emp where emp.Department_Name = dep.Dept_Name
                                                                                                           and   emp.Employee_SSN = :ssn",
                                         new KeyValuePair<string, object>("ssn", employee.SSN));
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
-            //Example
-            FillList<Donor>("Some select query",
-                            new KeyValuePair<string, object>("hi", 2),
-                            new KeyValuePair<string, object>("hello", DateTime.Now);
-            throw new NotImplementedException();
+            return FillList<Donor>(@"select * from Donate_to DT, Donor D, Person P 
+                                    where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN",
+                            new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = @"select * from Donate_to DT , Donor D, Person P
+                              where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN and
+                              DT.ItemName = :IName and DT.ItemMainName = :IMN and DT.ItemSubName = :ISN ",
+                CommandType = CommandType.Text
+            };
+            cmd.Parameters.Add("IDT", campaign.ID);
+            cmd.Parameters.Add("IName", item.Name);
+            cmd.Parameters.Add("IMN", item.Main);
+            cmd.Parameters.Add("ISN", item.Sub);
+            OracleDataReader reader = cmd.ExecuteReader();
+            List<DonorItem> list = new List<DonorItem>();
+            while (reader.Read())
+            {
+                list.Add(new DonorItem()
+                {
+                    Donor = FillObject<Donor>(reader),
+                    Campaign = campaign,
+                    Item = item,
+                    Count = (int)reader["Count_"]
+                });
+            }
+            reader.Close();
+            return list.ToArray();
         }
         public Employee GetEmployeeManaging(Campaign campaign)
         {
-            throw new NotImplementedException();
+            return FillList<Employee>(@"select * from Campaign C, Employee E, Person P 
+                                where C.ID_ = :IDT and C.Employee_SSN = E.Employee_SSN and E.Employee_SSN = P.SSN",
+                                new KeyValuePair<string, object>("IDT", campaign.ID))[0];
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
-            throw new NotImplementedException();
+            return FillList<Employee>(@"select * from Employee E , Person P 
+                                        where E.Department_Name = :DN and E.Employee_SSN = P.SSN",
+                            new KeyValuePair<string, object>("DN", department.DeptName));
         }
         public Item[] GetItemsDonatedBy(Donor donor)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Donate_to DT where DT.Donor_SSN = :DN",
+                            new KeyValuePair<string, object>("DN", donor.SSN));
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Donate_to RF where RF.Campaign_ID = :IDT",
+                            new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN",
+                            new KeyValuePair<string, object>("IMN", mainCategory.Name));
         }
         public Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN",
+                            new KeyValuePair<string, object>("IMN", mainCategory.Name),
+                            new KeyValuePair<string, object>("ISN", subCategory.Name));
         }
         public Item[] GetItemsReceivedBy(Recepient recepient)
         {
-            throw new NotImplementedException();
+            return FillList<Item>("select * from Receives_From RF where RF.Recipient_SSN = :RSSN",
+                            new KeyValuePair<string, object>("RSSN", recepient.SSN));
         }
         public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
         {
-            throw new NotImplementedException();
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = @"select * from Receives_From RF , Recipient R, Person P
+                              where RF.Campaign_ID = :IDT and RF.Donor_SSN = R.Donor_SSN and R.Donor_SSN = P.SSN and
+                              DT.ItemName = :IName and DT.ItemMainName = :IMN and DT.ItemSubName = :ISN ",
+                CommandType = CommandType.Text
+            };
+            cmd.Parameters.Add("IDT", campaign.ID);
+            cmd.Parameters.Add("IName", item.Name);
+            cmd.Parameters.Add("IMN", item.Main);
+            cmd.Parameters.Add("ISN", item.Sub);
+            OracleDataReader reader = cmd.ExecuteReader();
+            List<RecepientItem> list = new List<RecepientItem>();
+            while (reader.Read())
+            {
+                list.Add(new RecepientItem()
+                {
+                    Recipient = FillObject<Recepient>(reader),
+                    Campaign = campaign,
+                    Item = item,
+                    Count = (int)reader["Count_"]
+                });
+            }
+            reader.Close();
+            return list.ToArray();
         }
         //
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
