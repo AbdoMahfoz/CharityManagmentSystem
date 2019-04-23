@@ -129,14 +129,39 @@ namespace CharityManagmentSystem
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
-            return FillList<Donor>("select * Donor_SSN from Donate_to DT where DT.Campaign_ID = :IDT",
+            return FillList<Donor>(@"select * from Donate_to DT, Donor D, Person P 
+                                    where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN",
                             new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
         {
-            return FillList<DonorItem>("select Donor_SSN from Donate_to DT , Item I where DT.Campaign_ID = :IDT and I.Name_ = :Namee",
-                            new KeyValuePair<string, object>("IDT", campaign.ID),
-                            new KeyValuePair<string, object>("Namee", item.Name));
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = @"select * from Donate_to DT , Donor D, Person P
+                              where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN and
+                              DT.ItemName = :IName and DT.ItemMainName = :IMN and DT.ItemSubName = :ISN ",
+                CommandType = CommandType.Text
+            };
+            cmd.Parameters.Add("IDT", campaign.ID);
+            cmd.Parameters.Add("IName", item.Name);
+            cmd.Parameters.Add("IMN", item.Main);
+            cmd.Parameters.Add("ISN", item.Sub);
+            OracleDataReader reader = cmd.ExecuteReader();
+            Employee employee = new Employee();
+            List<DonorItem> list = new List<DonorItem>();
+            while (reader.Read())
+            {
+                list.Add(new DonorItem()
+                {
+                    Donor = FillObject<Donor>(reader),
+                    Campaign = campaign,
+                    Item = item,
+                    Count = (int)reader["Count_"]
+                });
+            }
+            reader.Close();
+            return list.ToArray();
         }
         public Employee GetEmployeeManaging(Campaign campaign)
         {
