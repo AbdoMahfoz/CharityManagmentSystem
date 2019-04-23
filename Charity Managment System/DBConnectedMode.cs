@@ -503,20 +503,25 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText = $"update Donate_to set Count_={item.Count}" +
-                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, ItemSubName={item.Item.Sub.Name}",
+                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}," +
+                $" ItemSubName={item.Item.Sub.Name},Donor_SSN={item.Donor.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
             };
             cmd.ExecuteNonQuery();
+           
         }
+        
         public void UpdateLink(RecepientItem item)
         {
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText =$"update Donate_to set Count_={item.Count}" +
-                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, ItemSubName={item.Item.Sub.Name}",
+                CommandText =$"update Receives_From set Count_={item.Count}" +
+                $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, " +
+                $"ItemSubName={item.Item.Sub.Name},Recipient_SSN={item.Recipient.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
             };
+           
             cmd.ExecuteNonQuery();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
@@ -557,10 +562,10 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {       
                 Connection = conn,
-                CommandText = $"update MainCategory set Name_={category.Name}" +
-                $"where ={}",
+                CommandText = $"Insert into MainCategory(Name_) Values ({category.Name}) ",
                 CommandType = CommandType.Text
             };
+            
             cmd.ExecuteNonQuery();
         }
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
@@ -568,10 +573,10 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {       
                 Connection = conn,
-                CommandText = $"update SubCategory set Name_={category.Name},Main_Name={mainCategory.Name}" +
-                $"where ={}",
+                CommandText = $"Insert into SubCategory (Name_,Main_Name) Values ({category.Name},{mainCategory.Name})",
                 CommandType = CommandType.Text
             };
+            
             cmd.ExecuteNonQuery();
         }
         public void DeleteEntity<T>(T Entity)
