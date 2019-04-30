@@ -39,13 +39,13 @@ namespace CharityManagmentSystem
                     Property.SetValue(res, reader[x]);
                 }
             }
-            if(typeof(T) == typeof(Item))
+            if (typeof(T) == typeof(Item))
             {
                 string x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "MainName"));
                 ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category_ c 
                                                                     where mc.Name_ = c.Name_
-                                                                    and mc.Name_ = :n", 
+                                                                    and mc.Name_ = :n",
                                                                     new KeyValuePair<string, object>("n", reader[x]))[0];
                 x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "SubName"));
@@ -64,7 +64,7 @@ namespace CharityManagmentSystem
                 CommandText = cmdstr,
                 CommandType = CommandType.Text
             };
-            foreach(var arg in args)
+            foreach (var arg in args)
             {
                 cmd.Parameters.Add(arg.Key, arg.Value);
             }
@@ -256,18 +256,18 @@ namespace CharityManagmentSystem
         {
             return FillList<Department>(@"select * from employee emp , department dept 
                                         where emp.deptartment_name=dept.dept_name and emp.employee_ssn=:emp_ssn",
-                                         new KeyValuePair<string, object>("emp_ssn",employee.SSN))[0];
+                                         new KeyValuePair<string, object>("emp_ssn", employee.SSN))[0];
         }
         public Campaign[] GetCampaginsManagedBy(Employee employee)
         {
             return FillList<Campaign>(@"select * from campaign c where c.employee_ssn=:emp_ssn",
-                                       new KeyValuePair<string, object>("emp_ssn",employee.SSN));
+                                       new KeyValuePair<string, object>("emp_ssn", employee.SSN));
         }
         public Campaign[] GetCampaignsOf(Volunteer volunteer)
         {
             return FillList<Campaign>(@"select * from campaign c ,volunteer_in Vin where c.id_=Vin.Campaign_ID 
                                       and Vin.volunteer_ssn=:volunteerSSN ",
-                                      new KeyValuePair<string, object>("volunteerSSN",volunteer.SSN));
+                                      new KeyValuePair<string, object>("volunteerSSN", volunteer.SSN));
         }
         public Campaign[] GetCampaignsOf(Donor donor)
         {
@@ -291,7 +291,7 @@ namespace CharityManagmentSystem
         {
             return FillList<DonorItem>(@"select * from donor d , donate_to dt where d.donor_ssn=dt.donor_ssn and 
                                        dt.itemname=:item",
-                                       new KeyValuePair<string, object>("item",item.Name));
+                                       new KeyValuePair<string, object>("item", item.Name));
         }
         public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
         {
@@ -492,9 +492,89 @@ namespace CharityManagmentSystem
             };
             cmd.ExecuteNonQuery();
         }
+        public void UpdateCampaignManager(Campaign campaign, Employee employee)
+        {
+            string query = $"UPDATE Campaign " +
+                           $"SET Employee_SSN = {employee.SSN} " +
+                           $"WHERE ID_ = {campaign.ID}";
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = query,
+                CommandType = CommandType.Text
+            };
+            if (cmd.ExecuteNonQuery() != 1)
+            {
+                throw new Exception("Invalid entity: no rows got updated");
+            }
+        }
         public void UpdateEntity<T>(T Entity)
         {
-            throw new NotImplementedException();
+            void ExecuteCommand(string query)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = query,
+                    CommandType = CommandType.Text
+                };
+                if (cmd.ExecuteNonQuery() != 1)
+                {
+                    throw new Exception("Invalid entity: no rows got updated");
+                }
+            }
+            if (Entity is Person person)
+            {
+                ExecuteCommand($"UPDATE Person " +
+                                $"SET Name_ = {person.Name}, Mail = {person.Mail} " +
+                                $"WHERE SSN = {person.SSN} ");
+            }
+            if (Entity is Department department)
+            {
+                ExecuteCommand($"UPDATE Department " +
+                                $"SET Description = {department.Description} " +
+                                $"WHERE Dept_Name = {department.DeptName} ");
+            }
+            if (Entity is Employee employee)
+            {
+                ExecuteCommand($"UPDATE Employee " +
+                                $"SET Salary = {employee.Salary} " +
+                                $"WHERE Employee_SSN = {employee.SSN}");
+            }
+            if (Entity is Campaign campaign)
+            {
+                ExecuteCommand($"UPDATE Campaign " +
+                               $"SET Date_ = {campaign.Date.ToString()}, Name_ = {campaign.Name}, Description_ = {campaign.Description}, " +
+                               $"    Location_ = {campaign.Location}, Budget = {campaign.Budget} " +
+                               $"WHERE ID_ = {campaign.ID}");
+            }
+            if (Entity is Category category)
+            {
+                ExecuteCommand($"UPDATE Category_ " +
+                                $"SET Description_ = {category.Description} " +
+                                $"WHERE Name_ = {category.Name}");
+            }
+            if (Entity is Item item)
+            {
+                ExecuteCommand($"UPDATE Item " +
+                               $"SET Description_ = {item.Description} " +
+                               $"WHERE Name_ = {item.Name}, MainName = {item.Main.Name}, SubName = {item.Sub.Name}");
+            }
+            if(Entity is DonorItem donorItem)
+            {
+                ExecuteCommand($"UPDATE Donate_to " +
+                               $"SET Count_ = {donorItem.Count} " +
+                               $"WHERE Donor_SSN = {donorItem.Donor.SSN}, Campaign_ID = {donorItem.Campaign.ID}, " +
+                               $"      ItemName = {donorItem.Item.Name}, ItemMainName = {donorItem.Item.Main.Name}, ItemSubName = {donorItem.Item.Sub.Name}");
+            }
+            if(Entity is RecepientItem recipientItem)
+            {
+                ExecuteCommand($"UPDATE Receives_From " +
+                               $"SET Count_ = {recipientItem.Count} " +
+                               $"WHERE Recipient_SSN = {recipientItem.Recipient.SSN}, Campaign_ID = {recipientItem.Campaign.ID}, " +
+                               $"      ItemName = {recipientItem.Item.Name}, ItemMainName = {recipientItem.Item.Main.Name} " +
+                               $"                                          , ItemSubName = {recipientItem.Item.Sub.Name}");
+            }
         }
         public void UpdateLink(DonorItem item)
         {
@@ -506,14 +586,14 @@ namespace CharityManagmentSystem
                 $" ItemSubName={item.Item.Sub.Name},Donor_SSN={item.Donor.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
             };
-            cmd.ExecuteNonQuery();  
+            cmd.ExecuteNonQuery();
         }
         public void UpdateLink(RecepientItem item)
         {
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText =$"update Receives_From set Count_={item.Count}" +
+                CommandText = $"update Receives_From set Count_={item.Count}" +
                 $"where ItemName={item.Item.Name}, ItemMainName={item.Item.Main.Name}, " +
                 $"ItemSubName={item.Item.Sub.Name},Recipient_SSN={item.Recipient.SSN},Campaign_ID={item.Campaign.ID}",
                 CommandType = CommandType.Text
@@ -528,7 +608,7 @@ namespace CharityManagmentSystem
                 CommandText = $"insert into  Volunteer_in (Volunteer_SSN,Campaign_ID)" +
                 $" Values({volunteer.SSN},{campaign.ID})",
                 CommandType = CommandType.Text
-            };   
+            };
             cmd.ExecuteNonQuery();
         }
         public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
@@ -556,7 +636,7 @@ namespace CharityManagmentSystem
         public void SetCategoryAsMain(Category category)
         {
             OracleCommand cmd = new OracleCommand
-            {       
+            {
                 Connection = conn,
                 CommandText = $"Insert into MainCategory(Name_) Values ({category.Name}) ",
                 CommandType = CommandType.Text
@@ -566,7 +646,7 @@ namespace CharityManagmentSystem
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
             OracleCommand cmd = new OracleCommand
-            {       
+            {
                 Connection = conn,
                 CommandText = $"Insert into SubCategory (Name_,Main_Name) Values ({category.Name},{mainCategory.Name})",
                 CommandType = CommandType.Text
