@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CharityManagmentSystem.Models
 {
-    class Beneficiary : Person
+    public class Beneficiary : Person
     {
     }
 }

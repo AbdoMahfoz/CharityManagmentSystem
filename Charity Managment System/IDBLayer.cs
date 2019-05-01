@@ -5,7 +5,7 @@ namespace CharityManagmentSystem
     /// <summary>
     /// Defines a list of functions that cover all interactions with the database
     /// </summary>
-    interface IDBLayer
+    internal interface IDBLayer
     {
         //Connection Control
         void InitializeConnection();
