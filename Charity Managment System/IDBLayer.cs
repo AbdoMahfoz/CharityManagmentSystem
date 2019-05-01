@@ -1,4 +1,5 @@
 ﻿using CharityManagmentSystem.Models;
+using System.Data;
 
 namespace CharityManagmentSystem
 {
@@ -85,5 +86,7 @@ namespace CharityManagmentSystem
         void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign);
         void UnSetCategoryAsMain(MainCategory category);
         void UnSetCategoryAsSub(SubCategory category);
+        //DataTable
+        DataTable GetTable(string tableName);
     }
 }

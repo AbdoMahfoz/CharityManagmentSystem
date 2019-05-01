@@ -24,8 +24,8 @@ namespace CharityManagmentSystem
         }
         private T FillObject<T>(OracleDataReader reader) where T : new()
         {
-            string[] list = new string[reader.FieldCount];
-            for (int i = 0; i < reader.FieldCount; i++)
+            string[] list = new string[reader.VisibleFieldCount];
+            for (int i = 0; i < reader.VisibleFieldCount; i++)
             {
                 list[i] = reader.GetName(i);
             }
@@ -62,9 +62,9 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText = cmdstr,
-                CommandType = (refCursor == null)? CommandType.Text : CommandType.StoredProcedure
+                CommandType = (refCursor == null) ? CommandType.Text : CommandType.StoredProcedure
             };
-            if(refCursor != null)
+            if (refCursor != null)
             {
                 cmd.Parameters.Add(refCursor, OracleDbType.RefCursor, ParameterDirection.Output);
             }
@@ -311,7 +311,7 @@ namespace CharityManagmentSystem
         }
         public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
         {
-            return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name",null,
+            return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name", null,
                                          new KeyValuePair<string, object>("name", mainCategory.Name));
         }
         public void InsertPersons(params Person[] people)
@@ -535,7 +535,7 @@ namespace CharityManagmentSystem
                     CommandText = query,
                     CommandType = type
                 };
-                foreach(var arg in args)
+                foreach (var arg in args)
                 {
                     cmd.Parameters.Add(arg.Key, arg.Value);
                 }
@@ -565,12 +565,12 @@ namespace CharityManagmentSystem
             if (Entity is Campaign campaign)
             {
                 ExecuteCommand("update_campaign", CommandType.StoredProcedure,
-                               new KeyValuePair<string, object>("Camp_ID", campaign.ID), 
-                               new KeyValuePair<string, object>("Date_",campaign.Date),
-                               new KeyValuePair<string,object>("Name_",campaign.Name),
-                               new KeyValuePair<string,object>("description",campaign.Description),
-                               new KeyValuePair<string,object>("Location_",campaign.Location),
-                               new KeyValuePair<string,object>("Budget",campaign.Budget));
+                               new KeyValuePair<string, object>("Camp_ID", campaign.ID),
+                               new KeyValuePair<string, object>("Date_", campaign.Date),
+                               new KeyValuePair<string, object>("Name_", campaign.Name),
+                               new KeyValuePair<string, object>("description", campaign.Description),
+                               new KeyValuePair<string, object>("Location_", campaign.Location),
+                               new KeyValuePair<string, object>("Budget", campaign.Budget));
             }
             if (Entity is Category category)
             {
@@ -687,7 +687,7 @@ namespace CharityManagmentSystem
                     CommandText = query,
                     CommandType = type
                 };
-                foreach(var arg in args)
+                foreach (var arg in args)
                 {
                     cmd.Parameters.Add(arg.Key, arg.Value);
                 }
@@ -802,7 +802,7 @@ namespace CharityManagmentSystem
             {
                 Connection = conn,
                 CommandText = "DeleteBeneficiaryParticipation",
-                CommandType=CommandType.StoredProcedure
+                CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.Add("ssn", beneficiary.SSN);
             cmd.Parameters.Add("camp_ID", campaign.ID);
@@ -827,6 +827,26 @@ namespace CharityManagmentSystem
             };
             cmd.Parameters.Add("category", category.Name);
             cmd.ExecuteNonQuery();
+        }
+        public DataTable GetTable(string tableName)
+        {
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = $"SELECT * FROM {tableName}"
+            };
+            var reader = cmd.ExecuteReader();
+            DataTable table = reader.GetSchemaTable();
+            while (reader.Read())
+            {
+                DataRow row = table.NewRow();
+                for (int i = 0; i < reader.VisibleFieldCount; i++)
+                {
+                    row[reader.GetName(i)] = reader[i];
+                }
+                table.Rows.Add(row);
+            }
+            return table;
         }
     }
 }

@@ -308,5 +308,9 @@ namespace CharityManagmentSystem
         {
             dbLayer.UpdateLink(recepientItem);
         }
+        public DataTable GetTable(string tableName)
+        {
+            return dbLayer.GetTable(tableName);
+        }
     }
 }

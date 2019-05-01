@@ -817,5 +817,10 @@ namespace CharityManagmentSystem
             dataSet.Tables["SubCategory"].Rows.Remove(row);
             dataSet.Tables["SubCategory"].AcceptChanges();
         }
+        public DataTable GetTable(string tableName)
+        {
+            FetchTable(tableName);
+            return dataSet.Tables[tableName];
+        }
     }
 }
