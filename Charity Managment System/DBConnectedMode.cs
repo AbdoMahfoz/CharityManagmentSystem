@@ -409,7 +409,7 @@ namespace CharityManagmentSystem
         {
              OracleCommand cmd = new OracleCommand();
             cmd.Connection = conn;
-            cmd.CommandText = @"delete from donate_to where donar_ssn=:ssn and
+            cmd.CommandText = @"delete from donate_to where donor_ssn=:ssn and
                                 ItemMainName=:MainName and  ItemSubName=:SubName and 
                                 itemName=:name";
             cmd.Parameters.Add("ssn", item.Donor.SSN);
