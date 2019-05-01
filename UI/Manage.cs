@@ -72,8 +72,8 @@ namespace UI
         {
             if(DepartmentEmployees.Visible)
             {
-                dataSet.Tables.Add(cms.GetTable("Department").Copy());
-                dataSet.Tables.Add(cms.GetTable("Employee").Copy());
+                dataSet.Tables.Add(cms.GetTable("Department"));
+                dataSet.Tables.Add(cms.GetTable("Employee"));
                 dataSet.Relations.Add(new DataRelation("DepartmentEmployee",
                     dataSet.Tables["Department"].Columns["DEPT_NAME"], dataSet.Tables["Employee"].Columns["Department_Name"]));
                 DepartmentTable.DataSource = new BindingSource(dataSet, "Department");

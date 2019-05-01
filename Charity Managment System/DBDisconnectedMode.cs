@@ -15,9 +15,11 @@ namespace CharityManagmentSystem
     {
         DataSet dataSet;
         readonly Dictionary<string, OracleDataAdapter> adapters;
+        readonly List<DataTable> foreginTables;
         public DBDisconnectedMode()
         {
             adapters = new Dictionary<string, OracleDataAdapter>();
+            foreginTables = new List<DataTable>();
         }
         /// <summary>
         /// Flush exisiting dataSet and make a new one
@@ -32,6 +34,10 @@ namespace CharityManagmentSystem
         /// </summary>
         public void TerminateConnection()
         {
+            foreach(var table in foreginTables)
+            {
+                dataSet.Merge(table);
+            }
             foreach(var adapter in adapters)
             {
                 new OracleCommandBuilder(adapter.Value);
@@ -819,18 +825,21 @@ namespace CharityManagmentSystem
         }
         public DataTable GetTable(string value, TableType tableType = TableType.Predefined)
         {
+            DataTable res = null;
             if(tableType == TableType.CustomQuery)
             {
                 OracleDataAdapter adapter = new OracleDataAdapter(value, DBGlobals.ConnectionString);
                 adapter.Fill(dataSet, $"Table{adapters.Count}");
                 adapters.Add($"Table{adapters.Count}", adapter);
-                return dataSet.Tables[$"Table{adapters.Count - 1}"];
+                res = dataSet.Tables[$"Table{adapters.Count - 1}"].Copy();
             }
             else
             {
                 FetchTable(value);
-                return dataSet.Tables[value];
+                res = dataSet.Tables[value].Copy();
             }
+            foreginTables.Add(res);
+            return res;
         }
     }
 }
