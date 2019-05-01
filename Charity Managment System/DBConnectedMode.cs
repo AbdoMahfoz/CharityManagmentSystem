@@ -560,14 +560,14 @@ namespace CharityManagmentSystem
                                $"SET Description_ = {item.Description} " +
                                $"WHERE Name_ = {item.Name}, MainName = {item.Main.Name}, SubName = {item.Sub.Name}");
             }
-            if(Entity is DonorItem donorItem)
+            if (Entity is DonorItem donorItem)
             {
                 ExecuteCommand($"UPDATE Donate_to " +
                                $"SET Count_ = {donorItem.Count} " +
                                $"WHERE Donor_SSN = {donorItem.Donor.SSN}, Campaign_ID = {donorItem.Campaign.ID}, " +
                                $"      ItemName = {donorItem.Item.Name}, ItemMainName = {donorItem.Item.Main.Name}, ItemSubName = {donorItem.Item.Sub.Name}");
             }
-            if(Entity is RecepientItem recipientItem)
+            if (Entity is RecepientItem recipientItem)
             {
                 ExecuteCommand($"UPDATE Receives_From " +
                                $"SET Count_ = {recipientItem.Count} " +
@@ -655,7 +655,79 @@ namespace CharityManagmentSystem
         }
         public void DeleteEntity<T>(T Entity)
         {
-            throw new NotImplementedException();
+            void ExecuteCommand(string query, CommandType type = CommandType.Text, params KeyValuePair<string, object>[] args)
+            {
+                OracleCommand cmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = query,
+                    CommandType = type
+                };
+                foreach(var arg in args)
+                {
+                    cmd.Parameters.Add(arg.Key, arg.Value);
+                }
+                cmd.ExecuteNonQuery();
+            }
+            if (Entity is Person person)
+            {
+                Dictionary<Type, string> tables = new Dictionary<Type, string>()
+                {
+                    { typeof(Volunteer), "Volunteer_in" },
+                    { typeof(Beneficiary), "Benefit_from" },
+                    { typeof(Donor), "Donate_to" },
+                    { typeof(Recepient), "Receives_From" }
+                };
+                if (Entity is Employee)
+                {
+                    ExecuteCommand($"UPDATE Campaign SET Employee_SSN = NULL WHERE Employe_SSN = {person.SSN}");
+                }
+                else if (tables.TryGetValue(typeof(T), out string table))
+                {
+                    ExecuteCommand($"DELETE FROM {table} WHERE {typeof(T).Name}_SSN = {person.SSN}");
+                }
+                ExecuteCommand($"DELETE FROM {typeof(T).Name} WHERE {typeof(T).Name}_SSN = {person.SSN}");
+                ExecuteCommand($"DELETE FROM Person WHERE SSN = {person.SSN}");
+            }
+            if (Entity is Department department)
+            {
+                ExecuteCommand($"UPDATE Employee SET Department_Name = NULL WHERE Department_Name = {department.DeptName}");
+                ExecuteCommand($"DELETE FROM Department WHERE Dept_Name = {department.DeptName}");
+            }
+            if (Entity is Campaign campaign)
+            {
+                ExecuteCommand($"DELETE FROM Donate_to WHERE Campaign_ID = {campaign.ID}");
+                ExecuteCommand($"DELETE FROM Receives_From WHERE Campaign_ID = {campaign.ID}");
+                ExecuteCommand($"DELETE FROM Campaign WHERE ID_ = {campaign.ID}");
+            }
+            if (Entity is Category category)
+            {
+                if (Entity is MainCategory mainCategory)
+                {
+                    ExecuteCommand($"DELETE FROM Donate_to WHERE ItemMainName = {mainCategory.Name}");
+                    ExecuteCommand($"DELETE FROM Receives_From WHERE ItemMainName = {mainCategory.Name}");
+                    ExecuteCommand($"DELETE FROM Item WHERE MainName = {mainCategory.Name}");
+                    ExecuteCommand($"DELETE FROM SubCategory WHERE Main_Name = {mainCategory.Name}");
+                    ExecuteCommand($"DELETE FROM MainCategory WHERE Name_ = {mainCategory.Name}");
+                }
+                else if (Entity is SubCategory subCategory)
+                {
+                    ExecuteCommand($"DELETE FROM Donate_to WHERE ItemSubName = {subCategory.Name}");
+                    ExecuteCommand($"DELETE FROM Receives_From WHERE ItemSubName = {subCategory.Name}");
+                    ExecuteCommand($"DELETE FROM Item WHERE SubName = {subCategory.Name}");
+                    ExecuteCommand($"DELETE FROM SubCategory WHERE Name_ = {subCategory.Name}");
+                }
+                ExecuteCommand($"DELETE FROM Category_ WHERE Name_ = {category.Name}");
+            }
+            if (Entity is Item item)
+            {
+                ExecuteCommand($"DELETE FROM Receives_From WHERE ItemName = {item.Name}," +
+                               $"                                ItemMainName = {item.Main.Name}, ItemSubName = {item.Sub.Name}");
+                ExecuteCommand($"DELETE FROM Donate_to WHERE ItemName = {item.Name}," +
+                               $"                            ItemMainName = {item.Main.Name}, ItemSubName = {item.Sub.Name}");
+                ExecuteCommand($"DELETE FROM Item WHERE Name_ = {item.Name}," +
+                               $"                       MainName = {item.Main.Name}, SubName = {item.Sub.Name}");
+            }
         }
         public void DeleteLink(DonorItem item)
         {
