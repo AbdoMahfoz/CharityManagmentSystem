@@ -118,10 +118,6 @@ namespace UI
         }
         private void Manage_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (DataTable table in dataSet.Tables)
-            {
-                table.AcceptChanges();
-            }
             cms.TerminateConnection();
         }
     }

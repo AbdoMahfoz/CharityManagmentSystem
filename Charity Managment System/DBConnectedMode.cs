@@ -836,7 +836,11 @@ namespace CharityManagmentSystem
                 CommandText = (tableType == TableType.Predefined)? $"SELECT * FROM {value}" : value
             };
             var reader = cmd.ExecuteReader();
-            DataTable table = reader.GetSchemaTable();
+            DataTable table = new DataTable();
+            for(int i = 0; i < reader.VisibleFieldCount; i++)
+            {
+                table.Columns.Add(new DataColumn(reader.GetName(i), reader.GetFieldType(i)));
+            }
             while (reader.Read())
             {
                 DataRow row = table.NewRow();
