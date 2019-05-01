@@ -58,9 +58,9 @@
             this.MainCategoryTable = new System.Windows.Forms.DataGridView();
             this.DepartmentEmployees = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
-            this.DepartmentsTable = new System.Windows.Forms.DataGridView();
-            this.label14 = new System.Windows.Forms.Label();
             this.EmployeesTable = new System.Windows.Forms.DataGridView();
+            this.label14 = new System.Windows.Forms.Label();
+            this.DepartmentTable = new System.Windows.Forms.DataGridView();
             this.CampaignsVolunteersBeneficiers = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.VCampaignsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolunteersTable)).BeginInit();
@@ -77,19 +77,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.SubCategoryTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MainCategoryTable)).BeginInit();
             this.DepartmentEmployees.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DepartmentsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EmployeesTable)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DepartmentTable)).BeginInit();
             this.CampaignsVolunteersBeneficiers.SuspendLayout();
             this.SuspendLayout();
             // 
             // VCampaignsTable
             // 
             this.VCampaignsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.VCampaignsTable.Location = new System.Drawing.Point(32, 103);
-            this.VCampaignsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.VCampaignsTable.Location = new System.Drawing.Point(48, 158);
             this.VCampaignsTable.Name = "VCampaignsTable";
             this.VCampaignsTable.RowTemplate.Height = 28;
-            this.VCampaignsTable.Size = new System.Drawing.Size(735, 164);
+            this.VCampaignsTable.Size = new System.Drawing.Size(1102, 252);
             this.VCampaignsTable.TabIndex = 0;
             // 
             // label1
@@ -97,10 +96,9 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(323, 66);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(484, 102);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 29);
+            this.label1.Size = new System.Drawing.Size(199, 40);
             this.label1.TabIndex = 1;
             this.label1.Text = "Campaigns";
             // 
@@ -109,21 +107,19 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(199, 275);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(298, 423);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(128, 29);
+            this.label2.Size = new System.Drawing.Size(189, 40);
             this.label2.TabIndex = 3;
             this.label2.Text = "Volunteers";
             // 
             // VolunteersTable
             // 
             this.VolunteersTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.VolunteersTable.Location = new System.Drawing.Point(149, 306);
-            this.VolunteersTable.Margin = new System.Windows.Forms.Padding(2);
+            this.VolunteersTable.Location = new System.Drawing.Point(224, 471);
             this.VolunteersTable.Name = "VolunteersTable";
             this.VolunteersTable.RowTemplate.Height = 28;
-            this.VolunteersTable.Size = new System.Drawing.Size(213, 134);
+            this.VolunteersTable.Size = new System.Drawing.Size(320, 206);
             this.VolunteersTable.TabIndex = 2;
             // 
             // label4
@@ -131,21 +127,19 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(453, 275);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(680, 423);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(134, 29);
+            this.label4.Size = new System.Drawing.Size(195, 40);
             this.label4.TabIndex = 7;
             this.label4.Text = "Beneficiers";
             // 
             // BeneficiersTable
             // 
             this.BeneficiersTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.BeneficiersTable.Location = new System.Drawing.Point(403, 306);
-            this.BeneficiersTable.Margin = new System.Windows.Forms.Padding(2);
+            this.BeneficiersTable.Location = new System.Drawing.Point(604, 471);
             this.BeneficiersTable.Name = "BeneficiersTable";
             this.BeneficiersTable.RowTemplate.Height = 28;
-            this.BeneficiersTable.Size = new System.Drawing.Size(213, 134);
+            this.BeneficiersTable.Size = new System.Drawing.Size(320, 206);
             this.BeneficiersTable.TabIndex = 6;
             // 
             // label3
@@ -153,20 +147,18 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(515, 12);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(772, 18);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 29);
+            this.label3.Size = new System.Drawing.Size(159, 40);
             this.label3.TabIndex = 8;
             this.label3.Text = "Manager";
             // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(630, 17);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Location = new System.Drawing.Point(945, 26);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 26);
+            this.textBox1.Size = new System.Drawing.Size(180, 35);
             this.textBox1.TabIndex = 9;
             // 
             // CampaignDonorsItems
@@ -180,9 +172,8 @@
             this.CampaignDonorsItems.Controls.Add(this.CampaignTable);
             this.CampaignDonorsItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CampaignDonorsItems.Location = new System.Drawing.Point(0, 0);
-            this.CampaignDonorsItems.Margin = new System.Windows.Forms.Padding(2);
             this.CampaignDonorsItems.Name = "CampaignDonorsItems";
-            this.CampaignDonorsItems.Size = new System.Drawing.Size(778, 447);
+            this.CampaignDonorsItems.Size = new System.Drawing.Size(1167, 688);
             this.CampaignDonorsItems.TabIndex = 10;
             this.CampaignDonorsItems.Visible = false;
             this.CampaignDonorsItems.VisibleChanged += new System.EventHandler(this.CampaignDonorsItems_VisibleChanged);
@@ -192,21 +183,19 @@
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(445, 238);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Location = new System.Drawing.Point(668, 366);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(71, 29);
+            this.label5.Size = new System.Drawing.Size(104, 40);
             this.label5.TabIndex = 13;
             this.label5.Text = "Items";
             // 
             // ItemsTable
             // 
             this.ItemsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ItemsTable.Location = new System.Drawing.Point(395, 275);
-            this.ItemsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.ItemsTable.Location = new System.Drawing.Point(592, 423);
             this.ItemsTable.Name = "ItemsTable";
             this.ItemsTable.RowTemplate.Height = 28;
-            this.ItemsTable.Size = new System.Drawing.Size(213, 107);
+            this.ItemsTable.Size = new System.Drawing.Size(320, 165);
             this.ItemsTable.TabIndex = 12;
             // 
             // label6
@@ -214,21 +203,19 @@
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(191, 238);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Location = new System.Drawing.Point(286, 366);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(91, 29);
+            this.label6.Size = new System.Drawing.Size(133, 40);
             this.label6.TabIndex = 11;
             this.label6.Text = "Donors";
             // 
             // DonorsTable
             // 
             this.DonorsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DonorsTable.Location = new System.Drawing.Point(149, 272);
-            this.DonorsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.DonorsTable.Location = new System.Drawing.Point(224, 418);
             this.DonorsTable.Name = "DonorsTable";
             this.DonorsTable.RowTemplate.Height = 28;
-            this.DonorsTable.Size = new System.Drawing.Size(192, 110);
+            this.DonorsTable.Size = new System.Drawing.Size(288, 169);
             this.DonorsTable.TabIndex = 10;
             // 
             // label7
@@ -236,21 +223,19 @@
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(315, 26);
-            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label7.Location = new System.Drawing.Point(472, 40);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(135, 29);
+            this.label7.Size = new System.Drawing.Size(199, 40);
             this.label7.TabIndex = 9;
             this.label7.Text = "Campaigns";
             // 
             // CampaignTable
             // 
             this.CampaignTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CampaignTable.Location = new System.Drawing.Point(24, 66);
-            this.CampaignTable.Margin = new System.Windows.Forms.Padding(2);
+            this.CampaignTable.Location = new System.Drawing.Point(36, 102);
             this.CampaignTable.Name = "CampaignTable";
             this.CampaignTable.RowTemplate.Height = 28;
-            this.CampaignTable.Size = new System.Drawing.Size(735, 164);
+            this.CampaignTable.Size = new System.Drawing.Size(1102, 252);
             this.CampaignTable.TabIndex = 8;
             // 
             // CampaignsReceipeintItems
@@ -264,9 +249,8 @@
             this.CampaignsReceipeintItems.Controls.Add(this.RCampaignsTable);
             this.CampaignsReceipeintItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CampaignsReceipeintItems.Location = new System.Drawing.Point(0, 0);
-            this.CampaignsReceipeintItems.Margin = new System.Windows.Forms.Padding(2);
             this.CampaignsReceipeintItems.Name = "CampaignsReceipeintItems";
-            this.CampaignsReceipeintItems.Size = new System.Drawing.Size(778, 447);
+            this.CampaignsReceipeintItems.Size = new System.Drawing.Size(1167, 688);
             this.CampaignsReceipeintItems.TabIndex = 14;
             this.CampaignsReceipeintItems.Visible = false;
             this.CampaignsReceipeintItems.VisibleChanged += new System.EventHandler(this.CampaignsReceipeintItems_VisibleChanged);
@@ -276,21 +260,19 @@
             this.label8.AutoSize = true;
             this.label8.BackColor = System.Drawing.Color.Transparent;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(445, 244);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Location = new System.Drawing.Point(668, 375);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(71, 29);
+            this.label8.Size = new System.Drawing.Size(104, 40);
             this.label8.TabIndex = 13;
             this.label8.Text = "Items";
             // 
             // RItemsTable
             // 
             this.RItemsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.RItemsTable.Location = new System.Drawing.Point(395, 275);
-            this.RItemsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.RItemsTable.Location = new System.Drawing.Point(592, 423);
             this.RItemsTable.Name = "RItemsTable";
             this.RItemsTable.RowTemplate.Height = 28;
-            this.RItemsTable.Size = new System.Drawing.Size(213, 134);
+            this.RItemsTable.Size = new System.Drawing.Size(320, 206);
             this.RItemsTable.TabIndex = 12;
             // 
             // label9
@@ -298,21 +280,19 @@
             this.label9.AutoSize = true;
             this.label9.BackColor = System.Drawing.Color.Transparent;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(191, 244);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Location = new System.Drawing.Point(286, 375);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(127, 29);
+            this.label9.Size = new System.Drawing.Size(185, 40);
             this.label9.TabIndex = 11;
             this.label9.Text = "Recipients";
             // 
             // RecepientsTable
             // 
             this.RecepientsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.RecepientsTable.Location = new System.Drawing.Point(141, 275);
-            this.RecepientsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.RecepientsTable.Location = new System.Drawing.Point(212, 423);
             this.RecepientsTable.Name = "RecepientsTable";
             this.RecepientsTable.RowTemplate.Height = 28;
-            this.RecepientsTable.Size = new System.Drawing.Size(213, 134);
+            this.RecepientsTable.Size = new System.Drawing.Size(320, 206);
             this.RecepientsTable.TabIndex = 10;
             // 
             // label10
@@ -320,21 +300,19 @@
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(315, 34);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label10.Location = new System.Drawing.Point(472, 52);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(135, 29);
+            this.label10.Size = new System.Drawing.Size(199, 40);
             this.label10.TabIndex = 9;
             this.label10.Text = "Campaigns";
             // 
             // RCampaignsTable
             // 
             this.RCampaignsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.RCampaignsTable.Location = new System.Drawing.Point(50, 72);
-            this.RCampaignsTable.Margin = new System.Windows.Forms.Padding(2);
+            this.RCampaignsTable.Location = new System.Drawing.Point(75, 111);
             this.RCampaignsTable.Name = "RCampaignsTable";
             this.RCampaignsTable.RowTemplate.Height = 28;
-            this.RCampaignsTable.Size = new System.Drawing.Size(679, 164);
+            this.RCampaignsTable.Size = new System.Drawing.Size(1018, 252);
             this.RCampaignsTable.TabIndex = 8;
             // 
             // MainSubCategory
@@ -346,9 +324,8 @@
             this.MainSubCategory.Controls.Add(this.MainCategoryTable);
             this.MainSubCategory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainSubCategory.Location = new System.Drawing.Point(0, 0);
-            this.MainSubCategory.Margin = new System.Windows.Forms.Padding(2);
             this.MainSubCategory.Name = "MainSubCategory";
-            this.MainSubCategory.Size = new System.Drawing.Size(778, 447);
+            this.MainSubCategory.Size = new System.Drawing.Size(1167, 688);
             this.MainSubCategory.TabIndex = 14;
             this.MainSubCategory.Visible = false;
             this.MainSubCategory.VisibleChanged += new System.EventHandler(this.MainSubCategory_VisibleChanged);
@@ -358,21 +335,19 @@
             this.label11.AutoSize = true;
             this.label11.BackColor = System.Drawing.Color.Transparent;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(241, 234);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label11.Location = new System.Drawing.Point(362, 360);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(153, 29);
+            this.label11.Size = new System.Drawing.Size(227, 40);
             this.label11.TabIndex = 13;
             this.label11.Text = "SubCategory";
             // 
             // SubCategoryTable
             // 
             this.SubCategoryTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.SubCategoryTable.Location = new System.Drawing.Point(237, 271);
-            this.SubCategoryTable.Margin = new System.Windows.Forms.Padding(2);
+            this.SubCategoryTable.Location = new System.Drawing.Point(356, 417);
             this.SubCategoryTable.Name = "SubCategoryTable";
             this.SubCategoryTable.RowTemplate.Height = 28;
-            this.SubCategoryTable.Size = new System.Drawing.Size(307, 133);
+            this.SubCategoryTable.Size = new System.Drawing.Size(460, 205);
             this.SubCategoryTable.TabIndex = 12;
             // 
             // label12
@@ -380,35 +355,32 @@
             this.label12.AutoSize = true;
             this.label12.BackColor = System.Drawing.Color.Transparent;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(232, 46);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Location = new System.Drawing.Point(348, 71);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(162, 29);
+            this.label12.Size = new System.Drawing.Size(241, 40);
             this.label12.TabIndex = 11;
             this.label12.Text = "MainCategory";
             // 
             // MainCategoryTable
             // 
             this.MainCategoryTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.MainCategoryTable.Location = new System.Drawing.Point(237, 94);
-            this.MainCategoryTable.Margin = new System.Windows.Forms.Padding(2);
+            this.MainCategoryTable.Location = new System.Drawing.Point(356, 145);
             this.MainCategoryTable.Name = "MainCategoryTable";
             this.MainCategoryTable.RowTemplate.Height = 28;
-            this.MainCategoryTable.Size = new System.Drawing.Size(307, 116);
+            this.MainCategoryTable.Size = new System.Drawing.Size(460, 178);
             this.MainCategoryTable.TabIndex = 10;
             // 
             // DepartmentEmployees
             // 
             this.DepartmentEmployees.BackColor = System.Drawing.Color.Transparent;
             this.DepartmentEmployees.Controls.Add(this.label13);
-            this.DepartmentEmployees.Controls.Add(this.DepartmentsTable);
-            this.DepartmentEmployees.Controls.Add(this.label14);
             this.DepartmentEmployees.Controls.Add(this.EmployeesTable);
+            this.DepartmentEmployees.Controls.Add(this.label14);
+            this.DepartmentEmployees.Controls.Add(this.DepartmentTable);
             this.DepartmentEmployees.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DepartmentEmployees.Location = new System.Drawing.Point(0, 0);
-            this.DepartmentEmployees.Margin = new System.Windows.Forms.Padding(2);
             this.DepartmentEmployees.Name = "DepartmentEmployees";
-            this.DepartmentEmployees.Size = new System.Drawing.Size(778, 447);
+            this.DepartmentEmployees.Size = new System.Drawing.Size(1167, 688);
             this.DepartmentEmployees.TabIndex = 14;
             this.DepartmentEmployees.Visible = false;
             this.DepartmentEmployees.VisibleChanged += new System.EventHandler(this.DepartmentEmployees_VisibleChanged);
@@ -418,44 +390,40 @@
             this.label13.AutoSize = true;
             this.label13.BackColor = System.Drawing.Color.Transparent;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(229, 231);
-            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Location = new System.Drawing.Point(344, 355);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(120, 29);
+            this.label13.Size = new System.Drawing.Size(175, 40);
             this.label13.TabIndex = 17;
             this.label13.Text = "Employes";
             // 
-            // DepartmentsTable
+            // EmployeesTable
             // 
-            this.DepartmentsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DepartmentsTable.Location = new System.Drawing.Point(224, 268);
-            this.DepartmentsTable.Margin = new System.Windows.Forms.Padding(2);
-            this.DepartmentsTable.Name = "DepartmentsTable";
-            this.DepartmentsTable.RowTemplate.Height = 28;
-            this.DepartmentsTable.Size = new System.Drawing.Size(307, 133);
-            this.DepartmentsTable.TabIndex = 16;
+            this.EmployeesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.EmployeesTable.Location = new System.Drawing.Point(336, 412);
+            this.EmployeesTable.Name = "EmployeesTable";
+            this.EmployeesTable.RowTemplate.Height = 28;
+            this.EmployeesTable.Size = new System.Drawing.Size(460, 205);
+            this.EmployeesTable.TabIndex = 16;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.BackColor = System.Drawing.Color.Transparent;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(219, 44);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Location = new System.Drawing.Point(328, 68);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(138, 29);
+            this.label14.Size = new System.Drawing.Size(205, 40);
             this.label14.TabIndex = 15;
             this.label14.Text = "Department";
             // 
-            // EmployeesTable
+            // DepartmentTable
             // 
-            this.EmployeesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.EmployeesTable.Location = new System.Drawing.Point(224, 91);
-            this.EmployeesTable.Margin = new System.Windows.Forms.Padding(2);
-            this.EmployeesTable.Name = "EmployeesTable";
-            this.EmployeesTable.RowTemplate.Height = 28;
-            this.EmployeesTable.Size = new System.Drawing.Size(307, 116);
-            this.EmployeesTable.TabIndex = 14;
+            this.DepartmentTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DepartmentTable.Location = new System.Drawing.Point(336, 140);
+            this.DepartmentTable.Name = "DepartmentTable";
+            this.DepartmentTable.RowTemplate.Height = 28;
+            this.DepartmentTable.Size = new System.Drawing.Size(460, 178);
+            this.DepartmentTable.TabIndex = 14;
             // 
             // CampaignsVolunteersBeneficiers
             // 
@@ -468,25 +436,25 @@
             this.CampaignsVolunteersBeneficiers.Controls.Add(this.label3);
             this.CampaignsVolunteersBeneficiers.Controls.Add(this.textBox1);
             this.CampaignsVolunteersBeneficiers.Location = new System.Drawing.Point(0, 0);
+            this.CampaignsVolunteersBeneficiers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CampaignsVolunteersBeneficiers.Name = "CampaignsVolunteersBeneficiers";
-            this.CampaignsVolunteersBeneficiers.Size = new System.Drawing.Size(778, 447);
+            this.CampaignsVolunteersBeneficiers.Size = new System.Drawing.Size(1167, 688);
             this.CampaignsVolunteersBeneficiers.TabIndex = 15;
             this.CampaignsVolunteersBeneficiers.Visible = false;
             this.CampaignsVolunteersBeneficiers.VisibleChanged += new System.EventHandler(this.CamapignsVolunteersBeneficiers_VisibleChanged);
             // 
             // Manage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(778, 447);
-            this.Controls.Add(this.CampaignsVolunteersBeneficiers);
-            this.Controls.Add(this.CampaignsReceipeintItems);
+            this.ClientSize = new System.Drawing.Size(1167, 688);
             this.Controls.Add(this.DepartmentEmployees);
             this.Controls.Add(this.MainSubCategory);
             this.Controls.Add(this.CampaignDonorsItems);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Controls.Add(this.CampaignsVolunteersBeneficiers);
+            this.Controls.Add(this.CampaignsReceipeintItems);
             this.Name = "Manage";
             this.Text = "Manage";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Manage_FormClosing);
@@ -509,8 +477,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.MainCategoryTable)).EndInit();
             this.DepartmentEmployees.ResumeLayout(false);
             this.DepartmentEmployees.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DepartmentsTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EmployeesTable)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DepartmentTable)).EndInit();
             this.CampaignsVolunteersBeneficiers.ResumeLayout(false);
             this.CampaignsVolunteersBeneficiers.PerformLayout();
             this.ResumeLayout(false);
@@ -548,9 +516,9 @@
         private System.Windows.Forms.DataGridView MainCategoryTable;
         private System.Windows.Forms.Panel DepartmentEmployees;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.DataGridView DepartmentsTable;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.DataGridView EmployeesTable;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.DataGridView DepartmentTable;
         private System.Windows.Forms.Panel CampaignsVolunteersBeneficiers;
     }
 }
