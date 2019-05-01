@@ -60,7 +60,6 @@ namespace CharityManagmentSystem
                 lock(dataSet)
                 {
                     dataSet.Merge(tmp);
-                    dataSet.AcceptChanges();
                 }
                 lock(adapters)
                 {
@@ -202,8 +201,6 @@ namespace CharityManagmentSystem
                 }
                 dataSet.Tables[tableName].Rows.Add(row);
             }
-            dataSet.Tables["Person"].AcceptChanges();
-            dataSet.Tables[tableName].AcceptChanges();
         }
         public Beneficiary[] GetAllBeneficiaries()
         {
@@ -586,7 +583,6 @@ namespace CharityManagmentSystem
         {
             FetchTable("Person");
             dataSet.Tables["Person"].Rows.Add(ToDataRow(people));
-            dataSet.Tables["Person"].AcceptChanges();
         }
         public void InsertBeneficiary(params Beneficiary[] beneficiaries)
         {
@@ -615,7 +611,6 @@ namespace CharityManagmentSystem
             {
                 dataSet.Tables["Campaign"].Rows.Add(row);
             }
-            dataSet.Tables["Campaign"].AcceptChanges();
         }
         public void InsertCategories(params Category[] categories)
         {
@@ -624,7 +619,6 @@ namespace CharityManagmentSystem
             {
                 dataSet.Tables["Category_"].Rows.Add(row);
             }
-            dataSet.Tables["Category_"].AcceptChanges();
         }
         public void InsertDepartments(params Department[] departments)
         {
@@ -633,7 +627,6 @@ namespace CharityManagmentSystem
             {
                 dataSet.Tables["Department"].Rows.Add(row);
             }
-            dataSet.Tables["Department"].AcceptChanges();
         }
         public void InsertItems(params Item[] items)
         {
@@ -647,7 +640,6 @@ namespace CharityManagmentSystem
                 row["SubName"] = item.Sub.Name;
                 dataSet.Tables["Item"].Rows.Add(row);
             }
-            dataSet.Tables["Item"].AcceptChanges();
         }
         public void LinkItemWithDonor(DonorItem item)
         {
@@ -660,7 +652,6 @@ namespace CharityManagmentSystem
             row["Campaign_ID"] = item.Campaign.ID;
             row["Count_"] = item.Count;
             dataSet.Tables["Donate_to"].Rows.Add(row);
-            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void LinkItemWithRecepient(RecepientItem item)
         {
@@ -673,7 +664,6 @@ namespace CharityManagmentSystem
             row["Campaign_ID"] = item.Campaign.ID;
             row["Count_"] = item.Count;
             dataSet.Tables["Receieves_From"].Rows.Add(row);
-            dataSet.Tables["Receieves_From"].AcceptChanges();
         }
         public void SetCampaignManager(Campaign campaign, Employee employee)
         {
@@ -682,7 +672,6 @@ namespace CharityManagmentSystem
                            where entry.Field<int>("ID_") == campaign.ID
                            select entry).Single();
             row["Employe_SSN"] = employee.SSN;
-            dataSet.Tables["Campaign"].AcceptChanges();
         }
         public void RecordVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
@@ -691,7 +680,6 @@ namespace CharityManagmentSystem
             row["Volunteer_SSN"] = volunteer.SSN;
             row["Campaign_ID"] = campaign.ID;
             dataSet.Tables["Volunteer_in"].Rows.Add(row);
-            dataSet.Tables["Volunteer_in"].AcceptChanges();
         }
         public void RecordBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
@@ -700,7 +688,6 @@ namespace CharityManagmentSystem
             row["Beneficiary_SSN"] = beneficiary.SSN;
             row["Campaign_ID"] = campaign.ID;
             dataSet.Tables["Benefit_from"].Rows.Add(row);
-            dataSet.Tables["Benefit_from"].AcceptChanges();
         }
         public void SetEmployeeDepartment(Employee employee, Department department)
         {
@@ -709,13 +696,11 @@ namespace CharityManagmentSystem
                        where entry.Field<int>("Employee_SSN") == employee.SSN
                        select entry).Single();
             row["Department_Name"] = department.DeptName;
-            dataSet.Tables["Employee"].AcceptChanges();
         }
         public void SetCategoryAsMain(Category category)
         {
             FetchTable("MainCategory");
             dataSet.Tables["MainCategory"].Rows.Add(ToDataRow(category));
-            dataSet.Tables["MainCategory"].AcceptChanges();
         }
         public void SetCategoryAsSub(Category category, MainCategory mainCategory)
         {
@@ -723,7 +708,6 @@ namespace CharityManagmentSystem
             DataRow row = ToDataRow(category);
             row["Main_Name"] = mainCategory.Name;
             dataSet.Tables["SubCategory"].Rows.Add(row);
-            dataSet.Tables["SubCategory"].AcceptChanges();
         }
         public void UpdateEntity<T>(T Entity)
         {
@@ -740,7 +724,6 @@ namespace CharityManagmentSystem
                              entry.Field<string>("ItemSubName") == donorItem.Item.Sub.Name
                        select entry).Single();
             row["Count_"] = donorItem.Count;
-            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void UpdateLink(RecepientItem recepientItem)
         {
@@ -753,7 +736,6 @@ namespace CharityManagmentSystem
                              entry.Field<string>("ItemSubName") == recepientItem.Item.Sub.Name
                        select entry).Single();
             row["Count_"] = recepientItem.Count;
-            dataSet.Tables["Receives_From"].AcceptChanges();
         }
         public void DeleteEntity<T>(T Entity)
         {
@@ -770,7 +752,6 @@ namespace CharityManagmentSystem
                              entry.Field<string>("ItemSubName") == item.Item.Sub.Name
                        select entry).Single();
             dataSet.Tables["Donate_to"].Rows.Remove(row);
-            dataSet.Tables["Donate_to"].AcceptChanges();
         }
         public void DeleteLink(RecepientItem item)
         {
@@ -783,7 +764,6 @@ namespace CharityManagmentSystem
                              entry.Field<string>("ItemSubName") == item.Item.Sub.Name
                        select entry).Single();
             dataSet.Tables["Receives_From"].Rows.Remove(row);
-            dataSet.Tables["Receives_From"].AcceptChanges();
         }
         public void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign)
         {
@@ -793,7 +773,6 @@ namespace CharityManagmentSystem
                              entry.Field<int>("Campaign_ID") == campaign.ID
                        select entry).Single();
             dataSet.Tables["Volunteer_in"].Rows.Remove(row);
-            dataSet.Tables["Volunteer_in"].AcceptChanges();
         }
         public void EraseBeneficiaryParticipation(Beneficiary beneficiary, Campaign campaign)
         {
@@ -803,7 +782,6 @@ namespace CharityManagmentSystem
                              entry.Field<int>("Campaign_ID") == campaign.ID
                        select entry).Single();
             dataSet.Tables["Benefit_from"].Rows.Remove(row);
-            dataSet.Tables["Benefit_from"].AcceptChanges();
         }
         public void UnSetCategoryAsMain(MainCategory category)
         {
@@ -812,7 +790,6 @@ namespace CharityManagmentSystem
                        where entry.Field<string>("Name_") == category.Name
                        select entry).Single();
             dataSet.Tables["MainCategory"].Rows.Remove(row);
-            dataSet.Tables["MainCategory"].AcceptChanges();
         }
         public void UnSetCategoryAsSub(SubCategory category)
         {
@@ -821,7 +798,6 @@ namespace CharityManagmentSystem
                        where entry.Field<string>("Name_") == category.Name
                        select entry).Single();
             dataSet.Tables["SubCategory"].Rows.Remove(row);
-            dataSet.Tables["SubCategory"].AcceptChanges();
         }
         public DataTable GetTable(string value, TableType tableType = TableType.Predefined)
         {
