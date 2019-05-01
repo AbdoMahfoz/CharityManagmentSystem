@@ -45,25 +45,29 @@ namespace CharityManagmentSystem
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "MainName"));
                 ((Item)(object)res).Main = FillList<MainCategory>(@"select * from MainCategory mc, Category_ c 
                                                                     where mc.Name_ = c.Name_
-                                                                    and mc.Name_ = :n",
+                                                                    and mc.Name_ = :n", null,
                                                                     new KeyValuePair<string, object>("n", reader[x]))[0];
                 x = Array.Find(list, new Predicate<string>(
                     (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == "SubName"));
                 ((Item)(object)res).Sub = FillList<SubCategory>(@"select * from SubCategory mc, Category_ c 
                                                                   where mc.Name_ = c.Name_
-                                                                  and mc.Name_ = :n",
+                                                                  and mc.Name_ = :n", null,
                                                                   new KeyValuePair<string, object>("n", reader[x]))[0];
             }
             return res;
         }
-        private T[] FillList<T>(string cmdstr, params KeyValuePair<string, object>[] args) where T : new()
+        private T[] FillList<T>(string cmdstr, string refCursor = null, params KeyValuePair<string, object>[] args) where T : new()
         {
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
                 CommandText = cmdstr,
-                CommandType = CommandType.Text
+                CommandType = (refCursor == null)? CommandType.Text : CommandType.StoredProcedure
             };
+            if(refCursor != null)
+            {
+                cmd.Parameters.Add(refCursor, OracleDbType.RefCursor, ParameterDirection.Output);
+            }
             foreach (var arg in args)
             {
                 cmd.Parameters.Add(arg.Key, arg.Value);
@@ -92,7 +96,7 @@ namespace CharityManagmentSystem
         }
         public Department[] GetAllDepartments()
         {
-            return FillList<Department>("select * from Department");
+            return FillList<Department>("GetALLDepartments", "dept");
         }
         public Donor[] GetAllDonors()
         {
@@ -129,19 +133,19 @@ namespace CharityManagmentSystem
         public Beneficiary[] GetBeneficiariesOf(Campaign campaign)
         {
             return FillList<Beneficiary>(@"select beneficiary_ssn from Beneficiary b ,Benefit_from bf 
-                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=:campaign",
+                                         where b.beneficiary_ssn=bf.beneficiary_ssn and bf.campaign_id=:campaign", null,
                                          new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Department[] GetDepartmentsInWhich(Employee employee)
         {
             return FillList<Department>(@"select dept_name,description from department dep , Employee emp where emp.Department_Name = dep.Dept_Name
-                                                                                                          and   emp.Employee_SSN = :ssn",
+                                                                                                          and   emp.Employee_SSN = :ssn", null,
                                         new KeyValuePair<string, object>("ssn", employee.SSN));
         }
         public Donor[] GetDonorsDonatingTo(Campaign campaign)
         {
             return FillList<Donor>(@"select * from Donate_to DT, Donor D, Person P 
-                                    where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN",
+                                    where DT.Campaign_ID = :IDT and DT.Donor_SSN = D.Donor_SSN and D.Donor_SSN = P.SSN", null,
                             new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public DonorItem[] GetDonorsOf(Campaign campaign, Item item)
@@ -176,39 +180,39 @@ namespace CharityManagmentSystem
         public Employee GetEmployeeManaging(Campaign campaign)
         {
             return FillList<Employee>(@"select * from Campaign C, Employee E, Person P 
-                                where C.ID_ = :IDT and C.Employee_SSN = E.Employee_SSN and E.Employee_SSN = P.SSN",
+                                where C.ID_ = :IDT and C.Employee_SSN = E.Employee_SSN and E.Employee_SSN = P.SSN", null,
                                 new KeyValuePair<string, object>("IDT", campaign.ID))[0];
         }
         public Employee[] GetEmployeesWorkingIn(Department department)
         {
             return FillList<Employee>(@"select * from Employee E , Person P 
-                                        where E.Department_Name = :DN and E.Employee_SSN = P.SSN",
+                                        where E.Department_Name = :DN and E.Employee_SSN = P.SSN", null,
                             new KeyValuePair<string, object>("DN", department.DeptName));
         }
         public Item[] GetItemsDonatedBy(Donor donor)
         {
-            return FillList<Item>("select * from Donate_to DT where DT.Donor_SSN = :DN",
+            return FillList<Item>("select * from Donate_to DT where DT.Donor_SSN = :DN", null,
                             new KeyValuePair<string, object>("DN", donor.SSN));
         }
         public Item[] GetItemsIn(Campaign campaign)
         {
-            return FillList<Item>("select * from Donate_to RF where RF.Campaign_ID = :IDT",
+            return FillList<Item>("select * from Donate_to RF where RF.Campaign_ID = :IDT", null,
                             new KeyValuePair<string, object>("IDT", campaign.ID));
         }
         public Item[] GetItemsOf(MainCategory mainCategory)
         {
-            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN",
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN", null,
                             new KeyValuePair<string, object>("IMN", mainCategory.Name));
         }
         public Item[] GetItemsOf(MainCategory mainCategory, SubCategory subCategory)
         {
-            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN",
+            return FillList<Item>("select * from Item I where I.ItemMainName = :IMN and I.ItemSubName = :ISN", null,
                             new KeyValuePair<string, object>("IMN", mainCategory.Name),
                             new KeyValuePair<string, object>("ISN", subCategory.Name));
         }
         public Item[] GetItemsReceivedBy(Recepient recepient)
         {
-            return FillList<Item>("select * from Receives_From RF where RF.Recipient_SSN = :RSSN",
+            return FillList<Item>("select * from Receives_From RF where RF.Recipient_SSN = :RSSN", null,
                             new KeyValuePair<string, object>("RSSN", recepient.SSN));
         }
         public RecepientItem[] GetRecepientsOf(Campaign campaign, Item item)
@@ -243,59 +247,71 @@ namespace CharityManagmentSystem
         public Recepient[] GetRecepientsReceivingFrom(Campaign campaign)
         {
             return FillList<Recepient>(@"select * from recepient r , Receives_From rf, Person p
-                                         where p.SSN = r.recepient_ssn and r.recipient_ssn = rf.Recipient_SSN and rf.Campaign_ID =:campaign",
+                                         where p.SSN = r.recepient_ssn and r.recipient_ssn = rf.Recipient_SSN and rf.Campaign_ID =:campaign", null,
                                          new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Volunteer[] GetVolunteersOf(Campaign campaign)
         {
             return FillList<Volunteer>(@"select * from volunteer v , volunteer_in Vin, Person p
-                                         where p.SSN = v.volunteer_ssn and v.volunteer_ssn = Vin.volunteer_SSN and Vin.Campaign_ID =:campaign",
+                                         where p.SSN = v.volunteer_ssn and v.volunteer_ssn = Vin.volunteer_SSN and Vin.Campaign_ID =:campaign", null,
                                         new KeyValuePair<string, object>("campaign", campaign.ID));
         }
         public Department GetDepartmentOf(Employee employee)
         {
-            return FillList<Department>(@"select * from employee emp , department dept 
-                                        where emp.deptartment_name=dept.dept_name and emp.employee_ssn=:emp_ssn",
-                                         new KeyValuePair<string, object>("emp_ssn", employee.SSN))[0];
+            OracleCommand cmd = new OracleCommand
+            {
+                Connection = conn,
+                CommandText = "GetDepartmentOf",
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.Add("SSN", employee.SSN);
+            cmd.Parameters.Add("Name_", OracleDbType.Varchar2, ParameterDirection.Output);
+            cmd.Parameters.Add("description", OracleDbType.Varchar2, ParameterDirection.Output);
+            cmd.ExecuteNonQuery();
+            return new Department()
+            {
+                DeptName = cmd.Parameters["Name_"].Value as string,
+                Description = cmd.Parameters["description"].Value as string
+            };
         }
         public Campaign[] GetCampaginsManagedBy(Employee employee)
         {
-            return FillList<Campaign>(@"select * from campaign c where c.employee_ssn=:emp_ssn",
+            return FillList<Campaign>(@"select * from campaign c where c.employee_ssn=:emp_ssn", null,
                                        new KeyValuePair<string, object>("emp_ssn", employee.SSN));
         }
         public Campaign[] GetCampaignsOf(Volunteer volunteer)
         {
             return FillList<Campaign>(@"select * from campaign c ,volunteer_in Vin where c.id_=Vin.Campaign_ID 
-                                      and Vin.volunteer_ssn=:volunteerSSN ",
+                                      and Vin.volunteer_ssn=:volunteerSSN ", null,
                                       new KeyValuePair<string, object>("volunteerSSN", volunteer.SSN));
         }
         public Campaign[] GetCampaignsOf(Donor donor)
         {
             return FillList<Campaign>(@"select * from campaign c , donate_to D where c.id_=v.Campaign_ID 
-                                      and d.donor_ssn=:donorSSN ",
+                                      and d.donor_ssn=:donorSSN ", null,
                                       new KeyValuePair<string, object>("donorSSN", donor.SSN));
         }
         public Campaign[] GetCampaignsOf(Recepient recepient)
         {
             return FillList<Campaign>(@"select * from campaign c , Receives_From rf where c.id_=rf.Campaign_ID 
-                                      and rf.Recipient_SSN=:recipientSSN ",
+                                      and rf.Recipient_SSN=:recipientSSN ", null,
                                       new KeyValuePair<string, object>("recipientSSN", recepient.SSN));
         }
         public Campaign[] GetCampaignsOf(Beneficiary beneficiary)
         {
             return FillList<Campaign>(@"select * from campaign c , Benefit_from bf where c.id_=bf.Campaign_ID 
-                                      and bf.Beneficiary_SSN=:BeneficiarySSN ",
+                                      and bf.Beneficiary_SSN=:BeneficiarySSN ", null,
                                       new KeyValuePair<string, object>("BeneficiarySSN", beneficiary.SSN));
         }
         public DonorItem[] GetDonorsOf(Item item)
         {
             return FillList<DonorItem>(@"select * from donor d , donate_to dt where d.donor_ssn=dt.donor_ssn and 
-                                       dt.itemname=:item",
+                                       dt.itemname=:item", null,
                                        new KeyValuePair<string, object>("item", item.Name));
         }
         public SubCategory[] GetSubCategoriesOf(MainCategory mainCategory)
         {
-            return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name",
+            return FillList<SubCategory>(@"select * from SubCategory where Main_Name = :name",null,
                                          new KeyValuePair<string, object>("name", mainCategory.Name));
         }
         public void InsertPersons(params Person[] people)
@@ -434,9 +450,10 @@ namespace CharityManagmentSystem
                 OracleCommand cmd = new OracleCommand
                 {
                     Connection = conn,
-                    CommandText = "insert into Department values (:Name,:Description)"
+                    CommandText = "insertdep",
+                    CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add("Name", departments[i].DeptName);
+                cmd.Parameters.Add("Name_", departments[i].DeptName);
                 cmd.Parameters.Add("Description", departments[i].Description);
                 cmd.ExecuteNonQuery();
             }
@@ -510,14 +527,18 @@ namespace CharityManagmentSystem
         }
         public void UpdateEntity<T>(T Entity)
         {
-            void ExecuteCommand(string query)
+            void ExecuteCommand(string query, CommandType type = CommandType.Text, params KeyValuePair<string, object>[] args)
             {
                 OracleCommand cmd = new OracleCommand
                 {
                     Connection = conn,
                     CommandText = query,
-                    CommandType = CommandType.Text
+                    CommandType = type
                 };
+                foreach(var arg in args)
+                {
+                    cmd.Parameters.Add(arg.Key, arg.Value);
+                }
                 if (cmd.ExecuteNonQuery() != 1)
                 {
                     throw new Exception("Invalid entity: no rows got updated");
@@ -543,10 +564,13 @@ namespace CharityManagmentSystem
             }
             if (Entity is Campaign campaign)
             {
-                ExecuteCommand($"UPDATE Campaign " +
-                               $"SET Date_ = {campaign.Date.ToString()}, Name_ = {campaign.Name}, Description_ = {campaign.Description}, " +
-                               $"    Location_ = {campaign.Location}, Budget = {campaign.Budget} " +
-                               $"WHERE ID_ = {campaign.ID}");
+                ExecuteCommand("update_campaign", CommandType.StoredProcedure,
+                               new KeyValuePair<string, object>("Camp_ID", campaign.ID), 
+                               new KeyValuePair<string, object>("Date_",campaign.Date),
+                               new KeyValuePair<string,object>("Name_",campaign.Name),
+                               new KeyValuePair<string,object>("description",campaign.Description),
+                               new KeyValuePair<string,object>("Location_",campaign.Location),
+                               new KeyValuePair<string,object>("Budget",campaign.Budget));
             }
             if (Entity is Category category)
             {
@@ -705,10 +729,11 @@ namespace CharityManagmentSystem
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = "delete from benefit_from where beneficiary_SSN=:ssn and campaign_ID=:campaignID "
+                CommandText = "DeleteBeneficiaryParticipation",
+                CommandType=CommandType.StoredProcedure
             };
             cmd.Parameters.Add("ssn", beneficiary.SSN);
-            cmd.Parameters.Add("campaignID", campaign.ID);
+            cmd.Parameters.Add("camp_ID", campaign.ID);
             cmd.ExecuteNonQuery();
         }
         public void UnSetCategoryAsMain(MainCategory category)
