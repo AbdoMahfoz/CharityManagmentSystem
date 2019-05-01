@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace UI
 {
     public partial class Form1 : Form
@@ -15,6 +16,73 @@ namespace UI
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void toolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Manage(0).ShowDialog();
+            Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Manage(1).ShowDialog();
+            Show();
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Manage(2).ShowDialog();
+            Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Manage(3).ShowDialog();
+            Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Manage(4).ShowDialog();
+            Show();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Insert(2).ShowDialog();
+            Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Insert(1).ShowDialog();
+            Show();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new Insert(3).ShowDialog();
+            Show();
         }
     }
 }
