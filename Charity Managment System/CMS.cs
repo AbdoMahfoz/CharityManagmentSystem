@@ -56,6 +56,18 @@ namespace CharityManagmentSystem
                 InitializeConnection();
             }
         }
+        public DataTable MergeTables(params string[] tables)
+        {
+            DataTable res = new DataTable();
+            string name = "";
+            foreach(string s in tables)
+            {
+                name += s;
+                res.Merge(GetTable(s, TableType.Predefined));
+            }
+            res.TableName = name;
+            return res;
+        }
         public void DeleteEntity<T>(T Entity)
         {
             dbLayer.DeleteEntity(Entity);
@@ -308,9 +320,9 @@ namespace CharityManagmentSystem
         {
             dbLayer.UpdateLink(recepientItem);
         }
-        public DataTable GetTable(string tableName)
+        public DataTable GetTable(string value, TableType tableType = TableType.Predefined)
         {
-            return dbLayer.GetTable(tableName);
+            return dbLayer.GetTable(value, tableType);
         }
     }
 }

@@ -828,12 +828,12 @@ namespace CharityManagmentSystem
             cmd.Parameters.Add("category", category.Name);
             cmd.ExecuteNonQuery();
         }
-        public DataTable GetTable(string tableName)
+        public DataTable GetTable(string value, TableType tableType = TableType.Predefined)
         {
             OracleCommand cmd = new OracleCommand
             {
                 Connection = conn,
-                CommandText = $"SELECT * FROM {tableName}"
+                CommandText = (tableType == TableType.Predefined)? $"SELECT * FROM {value}" : value
             };
             var reader = cmd.ExecuteReader();
             DataTable table = reader.GetSchemaTable();

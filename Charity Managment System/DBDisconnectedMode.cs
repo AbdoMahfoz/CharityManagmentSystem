@@ -817,10 +817,20 @@ namespace CharityManagmentSystem
             dataSet.Tables["SubCategory"].Rows.Remove(row);
             dataSet.Tables["SubCategory"].AcceptChanges();
         }
-        public DataTable GetTable(string tableName)
+        public DataTable GetTable(string value, TableType tableType = TableType.Predefined)
         {
-            FetchTable(tableName);
-            return dataSet.Tables[tableName];
+            if(tableType == TableType.CustomQuery)
+            {
+                OracleDataAdapter adapter = new OracleDataAdapter(value, DBGlobals.ConnectionString);
+                adapter.Fill(dataSet, $"Table{adapters.Count}");
+                adapters.Add($"Table{adapters.Count}", adapter);
+                return dataSet.Tables[$"Table{adapters.Count - 1}"];
+            }
+            else
+            {
+                FetchTable(value);
+                return dataSet.Tables[value];
+            }
         }
     }
 }

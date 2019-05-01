@@ -3,6 +3,7 @@ using System.Data;
 
 namespace CharityManagmentSystem
 {
+    public enum TableType { Predefined, CustomQuery }
     /// <summary>
     /// Defines a list of functions that cover all interactions with the database
     /// </summary>
@@ -75,11 +76,11 @@ namespace CharityManagmentSystem
         void SetCategoryAsMain(Category category);
         void SetCategoryAsSub(Category category, MainCategory mainCategory);
         //Updates
-        void UpdateEntity<T>(T Entity); //Tricky Tricky :D
+        void UpdateEntity<T>(T Entity);
         void UpdateLink(DonorItem donorItem);
         void UpdateLink(RecepientItem recepientItem);
         //Deletions
-        void DeleteEntity<T>(T Entity); //Tricky too but easier than update :D
+        void DeleteEntity<T>(T Entity);
         void DeleteLink(DonorItem item);
         void DeleteLink(RecepientItem item);
         void EraseVolunteerParticipation(Volunteer volunteer, Campaign campaign);
@@ -87,6 +88,6 @@ namespace CharityManagmentSystem
         void UnSetCategoryAsMain(MainCategory category);
         void UnSetCategoryAsSub(SubCategory category);
         //DataTable
-        DataTable GetTable(string tableName);
+        DataTable GetTable(string value, TableType tableType = TableType.Predefined);
     }
 }
