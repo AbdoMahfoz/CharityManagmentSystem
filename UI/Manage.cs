@@ -44,13 +44,19 @@ namespace UI
         {
             if (CampaignDonorsItems.Visible)
             {
+                DataTable donor = cms.GetTable(@"SELECT Name, SSN, Campaign_ID
+                                                 FROM Donate_to, Donor, Person
+                                                 WHERE Person.SSN = Donor.Donor_SSN AND Donate_to.Donor_SSN = Donor.Donor_SSN", TableType.CustomQuery);
+                DataTable item = cms.GetTable(@"SELECT Name_, Campaign_ID
+                                                FROM Donate_to, Item
+                                                WHERE Item.Name_ = Donate_to.ItemName AND Item.MainName = Donate_to.ItemMainName and Item.SubName = Donate_to.ItemSubName", TableType.CustomQuery);
                 dataSet.Tables.Add(cms.GetTable("Campaign"));
-                dataSet.Tables.Add(cms.GetTable("Donor"));
-                dataSet.Tables.Add(cms.GetTable("Item"));
+                dataSet.Tables.Add(donor);
+                dataSet.Tables.Add(item);
                 dataSet.Relations.Add(new DataRelation("CampaignDonor",
-                                                       dataSet.Tables["Campaign"].Columns["ID_"], dataSet.Tables["Donor"].Columns["Campaign_ID"]));
+                                                       dataSet.Tables["Campaign"].Columns["ID_"], donor.Columns["Campaign_ID"]));
                 dataSet.Relations.Add(new DataRelation("CampaignItem",
-                                                       dataSet.Tables["Campaign"].Columns["ID_"], dataSet.Tables["Item"].Columns["Campaign_ID"]));
+                                                       dataSet.Tables["Campaign"].Columns["ID_"], item.Columns["Campaign_ID"]));
                 CampaignTable.DataSource = new BindingSource(dataSet, "Campaign");
                 DonorsTable.DataSource = new BindingSource(CampaignTable.DataSource, "CampaignDonor");
                 ItemsTable.DataSource = new BindingSource(CampaignTable.DataSource, "CampaignItem");
@@ -84,13 +90,19 @@ namespace UI
         {
             if(CampaignsReceipeintItems.Visible)
             {
+                DataTable recepient = cms.GetTable(@"SELECT Name, SSN, Campaign_ID
+                                                     FROM Receives_From, Recepient, Person
+                                                     WHERE Person.SSN = Recepient.Recepient_SSN AND Receives_From.Recepient_SSN = Recepient.Recepient_SSN", TableType.CustomQuery);
+                DataTable item = cms.GetTable(@"SELECT Name_, Campaign_ID
+                                                FROM Receives_From, Item
+                                                WHERE Item.Name_ = Receives_From.ItemName AND Item.MainName = Receives_From.ItemMainName and Item.SubName = Receives_From.ItemSubName", TableType.CustomQuery);
                 dataSet.Tables.Add(cms.GetTable("Campaign"));
-                dataSet.Tables.Add(cms.GetTable("Recepient"));
-                dataSet.Tables.Add(cms.GetTable("Item"));
+                dataSet.Tables.Add(recepient);
+                dataSet.Tables.Add(item);
                 dataSet.Relations.Add(new DataRelation("CampaignRecepient",
-                                                       dataSet.Tables["Campaign"].Columns["ID_"], dataSet.Tables["Recepient"].Columns["Campaign_ID"]));
+                                                       dataSet.Tables["Campaign"].Columns["ID_"], recepient.Columns["Campaign_ID"]));
                 dataSet.Relations.Add(new DataRelation("CampaignItem",
-                                                       dataSet.Tables["Campaign"].Columns["ID_"], dataSet.Tables["Item"].Columns["Campaign_ID"]));
+                                                       dataSet.Tables["Campaign"].Columns["ID_"], item.Columns["Campaign_ID"]));
                 RCampaignsTable.DataSource = new BindingSource(dataSet, "Campaign");
                 RecepientsTable.DataSource = new BindingSource(RCampaignsTable.DataSource, "CampaignRecepient");
                 RItemsTable.DataSource = new BindingSource(RCampaignsTable.DataSource, "CampaignItem");
