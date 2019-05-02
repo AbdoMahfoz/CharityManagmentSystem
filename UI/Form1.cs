@@ -94,5 +94,26 @@ namespace UI
             new Insert(3).ShowDialog();
             Show();
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new CrystalReport4WF().ShowDialog();
+            Show();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new crystalreport2WF().ShowDialog();
+            Show();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new CrystalReport3WF().ShowDialog();
+            Show();
+        }
     }
 }
