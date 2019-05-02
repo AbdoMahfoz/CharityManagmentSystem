@@ -100,20 +100,20 @@ namespace UI
         {
             if (CampaignsVolunteersBeneficiers.Visible)
             {
-                DataTable volunteer = cms.GetTable(@"SELECT p.Name_ as Name, vi.Category_ID as CategoryID
+                DataTable volunteer = cms.GetTable(@"SELECT p.Name_ as Name, vi.Campaign_ID as CampaignID
                                                      FROM Person p, Volunteer v, Volunteer_in vi
                                                      WHERE p.SSN = v.Volunteer_SSN and p.SSN = vi.Volunteer_SSN", TableType.CustomQuery);
-                DataTable beneficiary = cms.GetTable(@"SELECT p.Name_ as Name, rf.Category_ID as CategoryID
+                DataTable beneficiary = cms.GetTable(@"SELECT p.Name_ as Name, rf.Campaign_ID as CampaignID
                                                        FROM Person p, Beneficiary r, Benefit_from rf
                                                        WHERE p.SSN = r.Beneficiary_SSN and p.SSN = rf.Beneficiary_SSN", TableType.CustomQuery);
                 dataSet.Tables.Add(volunteer);
                 dataSet.Tables.Add(beneficiary);
                 dataSet.Tables.Add(cms.GetTable("Campaign"));
-                dataSet.Relations.Add(new DataRelation("CampaignVolunteer", dataSet.Tables["Campaign"].Columns["ID_"], volunteer.Columns["CategoryID"]));
-                dataSet.Relations.Add(new DataRelation("CampaignBeneficiary", dataSet.Tables["Campaign"].Columns["ID_"], beneficiary.Columns["CategoryID"]));
+                dataSet.Relations.Add(new DataRelation("CampaignVolunteer", dataSet.Tables["Campaign"].Columns["ID_"], volunteer.Columns["CampaignID"]));
+                dataSet.Relations.Add(new DataRelation("CampaignBeneficiary", dataSet.Tables["Campaign"].Columns["ID_"], beneficiary.Columns["CampaignID"]));
                 VCampaignsTable.DataSource = new BindingSource(dataSet, "Campaign");
-                VolunteersTable.DataSource = new BindingSource(VCampaignsTable, "CampaignVolunteer");
-                BeneficiersTable.DataSource = new BindingSource(VCampaignsTable, "CampaignBeneficiary");
+                VolunteersTable.DataSource = new BindingSource(VCampaignsTable.DataSource, "CampaignVolunteer");
+                BeneficiersTable.DataSource = new BindingSource(VCampaignsTable.DataSource, "CampaignBeneficiary");
             }
         }
         private void Manage_FormClosing(object sender, FormClosingEventArgs e)

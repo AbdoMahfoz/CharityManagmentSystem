@@ -143,7 +143,7 @@ namespace CharityManagmentSystem
             Dictionary<string, System.Reflection.FieldInfo> Fields = new Dictionary<string, System.Reflection.FieldInfo>();
             foreach (var field in typeof(T).GetFields())
             {
-                Fields.Add(field.Name, field);
+                Fields.Add(field.Name.ToLower(), field);
             }
             string tableName = typeof(T).Name;
             if(tableName == "Category")
@@ -156,7 +156,7 @@ namespace CharityManagmentSystem
                 DataRow row = dataSet.Tables[tableName].NewRow();
                 foreach (DataColumn column in row.Table.Columns)
                 {
-                    if (Fields.TryGetValue(column.ColumnName.Replace("_", ""), out var value))
+                    if (Fields.TryGetValue(column.ColumnName.Replace("_", "").ToLower(), out var value))
                     {
                         row[column.ColumnName] = value.GetValue(Entity);
                     }

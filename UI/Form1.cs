@@ -17,14 +17,6 @@ namespace UI
     {
         public Form1()
         {
-            CMS cms = new CMS(DataAccessMode.Disconnected);
-            cms.InitializeConnection();
-            cms.InsertDepartments(new Department()
-            {
-                DeptName = "nignig",
-                Description = "ding ding"
-            });
-            cms.TerminateConnection();
             InitializeComponent();
         }
 

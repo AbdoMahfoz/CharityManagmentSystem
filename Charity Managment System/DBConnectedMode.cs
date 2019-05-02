@@ -100,11 +100,11 @@ namespace CharityManagmentSystem
         }
         public Donor[] GetAllDonors()
         {
-            return FillList<Donor>("select * from Donor d, Person p where d.SSN = p.SSN");
+            return FillList<Donor>("select * from Donor d, Person p where d.Donor_SSN = p.SSN");
         }
         public Employee[] GetAllEmployees()
         {
-            return FillList<Employee>("select * from Employee e, Person p where e.SSN = p.SSN");
+            return FillList<Employee>("select * from Employee e, Person p where e.Employee_SSN = p.SSN");
         }
         public Item[] GetAllItems()
         {
@@ -124,7 +124,7 @@ namespace CharityManagmentSystem
         }
         public SubCategory[] GetAllSubCategories()
         {
-            return FillList<SubCategory>("select * from SubCategory sub,category c where sub.name_=c.name_");
+            return FillList<SubCategory>("select * from SubCategory sub,category_ c where sub.name_=c.name_");
         }
         public Volunteer[] GetAllVolunteers()
         {
@@ -418,11 +418,11 @@ namespace CharityManagmentSystem
                 OracleCommand cmd = new OracleCommand
                 {
                     Connection = conn,
-                    CommandText = "insert into Campaign values (:ID,:Date,:Name,:Description,:Location,:Budget)"
+                    CommandText = "insert into Campaign (ID_, Date_, Name_, Description_, Location_, Budget) values (:ID_,:Date_,:Name_,:Description,:Location,:Budget)"
                 };
-                cmd.Parameters.Add("Id", campaigns[i].ID);
-                cmd.Parameters.Add("Date", campaigns[i].Date);
-                cmd.Parameters.Add("Name", campaigns[i].Name);
+                cmd.Parameters.Add("ID_", campaigns[i].ID);
+                cmd.Parameters.Add("Date_", campaigns[i].Date);
+                cmd.Parameters.Add("Name_", campaigns[i].Name);
                 cmd.Parameters.Add("Description", campaigns[i].Description);
                 cmd.Parameters.Add("Location", campaigns[i].Location);
                 cmd.Parameters.Add("Budget", campaigns[i].Budget);

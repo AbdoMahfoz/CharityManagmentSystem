@@ -95,19 +95,20 @@ namespace UI
             if (CheckNulls(InsertCampaign))
             {
                 DisableControls(InsertCampaign);
+                Campaign c = new Campaign()
+                {
+                    ID = int.Parse(CampaignID.Text),
+                    Budget = long.Parse(CampaignBudget.Text),
+                    Date = CampaignDate.Value,
+                    Description = CampaignDescription.Text,
+                    Name = CampaignName.Text,
+                    Location = CampaignLocation.Text
+                };
+                Employee manager = managers[CampaignManager.SelectedIndex];
                 await Task.Run(() =>
                 {
-                    Campaign c = new Campaign()
-                    {
-                        ID = int.Parse(CampaignID.Text),
-                        Budget = int.Parse(CampaignBudget.Text),
-                        Date = CampaignDate.Value,
-                        Description = CampaignDescription.Text,
-                        Name = CampaignName.Text,
-                        Location = CampaignLocation.Text
-                    };
                     cms.InsertCampaign(c);
-                    cms.SetCampaignManager(c, managers[CampaignManager.SelectedIndex]);
+                    cms.SetCampaignManager(c, manager);
                     cms.TerminateConnection();
                 });
                 EnableControls(InsertCampaign);
@@ -143,15 +144,15 @@ namespace UI
             if(CheckNulls(InsertItem))
             {
                 DisableControls(InsertItem);
+                Item item = new Item()
+                {
+                    Name = ItemName.Text,
+                    Description = ItemDescription.Text,
+                    Main = mainCategories[ItemMainCategory.SelectedIndex],
+                    Sub = subCategories[ItemSubCategory.SelectedIndex]
+                };
                 await Task.Run(() =>
                 {
-                    Item item = new Item()
-                    {
-                        Name = ItemName.Text,
-                        Description = ItemDescription.Text,
-                        Main = mainCategories[ItemMainCategory.SelectedIndex],
-                        Sub = subCategories[ItemSubCategory.SelectedIndex]
-                    };
                     cms.InsertItems(item);
                     cms.TerminateConnection();
                 });
@@ -182,15 +183,15 @@ namespace UI
             if(CheckNulls(InsertPerson))
             {
                 DisableControls(InsertPerson);
+                Person p = new Person()
+                {
+                    Name = PersonName.Text,
+                    Mail = PersonMail.Text, 
+                    Location = PersonLocationList.Items.Cast<string>().ToArray(),
+                    SSN = long.Parse(PersonSSN.Text),
+                };
                 await Task.Run(() =>
                 {
-                    Person p = new Person()
-                    {
-                        Name = PersonName.Text,
-                        Mail = PersonMail.Text, 
-                        Location = PersonLocationList.Items.Cast<string>().ToArray(),
-                        SSN = long.Parse(PersonSSN.Text),
-                    };
                     cms.InitializeConnection();
                     switch(PersonType.SelectedItem as string)
                     {
