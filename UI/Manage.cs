@@ -44,7 +44,7 @@ namespace UI
         {
             if (CampaignDonorsItems.Visible)
             {
-                DataTable donor = cms.GetTable(@"SELECT Name, SSN, Campaign_ID
+                DataTable donor = cms.GetTable(@"SELECT Name_, SSN, Campaign_ID
                                                  FROM Donate_to, Donor, Person
                                                  WHERE Person.SSN = Donor.Donor_SSN AND Donate_to.Donor_SSN = Donor.Donor_SSN", TableType.CustomQuery);
                 DataTable item = cms.GetTable(@"SELECT Name_, Campaign_ID
@@ -90,9 +90,9 @@ namespace UI
         {
             if(CampaignsReceipeintItems.Visible)
             {
-                DataTable recepient = cms.GetTable(@"SELECT Name, SSN, Campaign_ID
-                                                     FROM Receives_From, Recepient, Person
-                                                     WHERE Person.SSN = Recepient.Recepient_SSN AND Receives_From.Recepient_SSN = Recepient.Recepient_SSN", TableType.CustomQuery);
+                DataTable recepient = cms.GetTable(@"SELECT Name_, SSN, Campaign_ID
+                                                     FROM Receives_From, Recipient, Person
+                                                     WHERE Person.SSN = Recipient.Recipient_SSN AND Receives_From.Recipient_SSN = Recipient.Recipient_SSN", TableType.CustomQuery);
                 DataTable item = cms.GetTable(@"SELECT Name_, Campaign_ID
                                                 FROM Receives_From, Item
                                                 WHERE Item.Name_ = Receives_From.ItemName AND Item.MainName = Receives_From.ItemMainName and Item.SubName = Receives_From.ItemSubName", TableType.CustomQuery);

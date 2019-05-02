@@ -35,8 +35,6 @@
             this.VolunteersTable = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
             this.BeneficiersTable = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.CampaignDonorsItems = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.ItemsTable = new System.Windows.Forms.DataGridView();
@@ -141,25 +139,6 @@
             this.BeneficiersTable.RowTemplate.Height = 28;
             this.BeneficiersTable.Size = new System.Drawing.Size(320, 206);
             this.BeneficiersTable.TabIndex = 6;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(772, 18);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 40);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Manager";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(945, 26);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(180, 35);
-            this.textBox1.TabIndex = 9;
             // 
             // CampaignDonorsItems
             // 
@@ -433,8 +412,6 @@
             this.CampaignsVolunteersBeneficiers.Controls.Add(this.label2);
             this.CampaignsVolunteersBeneficiers.Controls.Add(this.BeneficiersTable);
             this.CampaignsVolunteersBeneficiers.Controls.Add(this.label4);
-            this.CampaignsVolunteersBeneficiers.Controls.Add(this.label3);
-            this.CampaignsVolunteersBeneficiers.Controls.Add(this.textBox1);
             this.CampaignsVolunteersBeneficiers.Location = new System.Drawing.Point(0, 0);
             this.CampaignsVolunteersBeneficiers.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CampaignsVolunteersBeneficiers.Name = "CampaignsVolunteersBeneficiers";
@@ -450,10 +427,10 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1167, 688);
-            this.Controls.Add(this.DepartmentEmployees);
-            this.Controls.Add(this.MainSubCategory);
-            this.Controls.Add(this.CampaignDonorsItems);
             this.Controls.Add(this.CampaignsVolunteersBeneficiers);
+            this.Controls.Add(this.CampaignDonorsItems);
+            this.Controls.Add(this.MainSubCategory);
+            this.Controls.Add(this.DepartmentEmployees);
             this.Controls.Add(this.CampaignsReceipeintItems);
             this.Name = "Manage";
             this.Text = "Manage";
@@ -493,8 +470,6 @@
         private System.Windows.Forms.DataGridView VolunteersTable;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView BeneficiersTable;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel CampaignDonorsItems;
         private System.Windows.Forms.Panel CampaignsReceipeintItems;
         private System.Windows.Forms.Label label8;
