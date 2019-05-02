@@ -18,7 +18,7 @@ namespace UI
         public Manage(int i)
         {
             dataSet = new DataSet();
-            cms = new CMS(DataAccessMode.Disconnected);
+            cms = new CMS(DataAccessMode.Connected);
             cms.InitializeConnection();
             InitializeComponent();
             switch(i)

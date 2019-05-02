@@ -33,7 +33,7 @@ namespace CharityManagmentSystem
             foreach (var Property in typeof(T).GetFields())
             {
                 string x = Array.Find(list, new Predicate<string>(
-                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
+                    (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "").ToLower() == Property.Name.ToLower()));
                 if (!string.IsNullOrEmpty(x))
                 {
                     Property.SetValue(res, reader[x]);
@@ -836,7 +836,7 @@ namespace CharityManagmentSystem
                 CommandText = (tableType == TableType.Predefined)? $"SELECT * FROM {value}" : value
             };
             var reader = cmd.ExecuteReader();
-            DataTable table = new DataTable();
+            DataTable table = new DataTable((tableType == TableType.Predefined) ? value : null);
             for(int i = 0; i < reader.VisibleFieldCount; i++)
             {
                 table.Columns.Add(new DataColumn(reader.GetName(i), reader.GetFieldType(i)));

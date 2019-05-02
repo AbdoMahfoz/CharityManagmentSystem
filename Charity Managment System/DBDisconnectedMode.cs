@@ -122,7 +122,7 @@ namespace CharityManagmentSystem
                     for (int i = 0; i < list.Length; i++)
                     {
                         string x = Array.Find(list[i], new Predicate<string>(
-                            (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "") == Property.Name));
+                            (string s) => s.Substring(s.LastIndexOf('.') + 1).Replace("_", "").ToLower() == Property.Name.ToLower()));
                         if (!string.IsNullOrEmpty(x))
                         {
                             Property.SetValue(res, rows[i][x]);
